@@ -1,0 +1,115 @@
+<div class="table-card">
+    <div class="table-scroll">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>N° Pedido</th>
+                    <th>Cliente</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (p of pedidos; track p.id) {
+                <tr>
+                    <td class="cell-title">{{ p.numero }}</td>
+                    <td>{{ p.cliente }}</td>
+                    <td>{{ p.fecha }}</td>
+                    <td>S/. {{ totalPedido(p).toLocaleString('es-PE') }}</td>
+                    <td>
+                        <span
+                            class="badge"
+                            [class.badge-success]="p.estado === 'Entregado'"
+                            [class.badge-muted]="p.estado !== 'Entregado'">
+                            {{ p.estado }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="row-actions">
+                            <button type="button" class="icon-btn" title="Ver pedido" (click)="ver(p)">
+                                <svg viewBox="0 0 24 24" fill="none"><path d="M2 12C3.6 7.6 7.5 5 12 5C16.5 5 20.4 7.6 22 12C20.4 16.4 16.5 19 12 19C7.5 19 3.6 16.4 2 12Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/></svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                } @empty {
+                <tr class="empty-row">
+                    <td colspan="6">No hay pedidos registrados.</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- MODAL: ver pedido -->
+@if (pedidoSeleccionado(); as pedido) {
+<div class="modal-overlay" (click)="cerrar()">
+    <div class="modal modal-lg" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3>Detalle del Pedido {{ pedido.numero }}</h3>
+            <button type="button" class="modal-close" (click)="cerrar()">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-grid" style="margin-bottom:20px;">
+                <div class="form-group">
+                    <label>Cliente</label>
+                    <div class="cell-title">{{ pedido.cliente }}</div>
+                </div>
+                <div class="form-group">
+                    <label>Fecha</label>
+                    <div class="cell-title">{{ pedido.fecha }}</div>
+                </div>
+                <div class="form-group">
+                    <label>Estado</label>
+                    <span
+                        class="badge"
+                        [class.badge-success]="pedido.estado === 'Entregado'"
+                        [class.badge-muted]="pedido.estado !== 'Entregado'"
+                        style="width:fit-content;">
+                        {{ pedido.estado }}
+                    </span>
+                </div>
+                <div class="form-group">
+                    <label>Total</label>
+                    <div class="cell-title">S/. {{ totalPedido(pedido).toLocaleString('es-PE') }}</div>
+                </div>
+            </div>
+
+            <div class="table-card">
+                <div class="table-scroll">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio unitario</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (item of pedido.productos; track item.nombre) {
+                            <tr>
+                                <td>{{ item.nombre }}</td>
+                                <td>{{ item.cantidad }}</td>
+                                <td>S/. {{ item.precioUnitario.toLocaleString('es-PE') }}</td>
+                                <td>S/. {{ (item.cantidad * item.precioUnitario).toLocaleString('es-PE') }}</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline" (click)="cerrar()">Cerrar</button>
+        </div>
+    </div>
+</div>
+}
