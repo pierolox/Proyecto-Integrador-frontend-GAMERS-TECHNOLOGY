@@ -1,0 +1,129 @@
+<div class="login-container">
+    <div class="backdrop"></div>
+    <div class="noise"></div>
+
+    <div class="login-card">
+        <div class="brand">
+            <div class="brand-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L3 6.5V11.5C3 16.7 6.8 21.4 12 22.5C17.2 21.4 21 16.7 21 11.5V6.5L12 2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                    <path d="M8.5 12L11 14.5L15.5 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <span>Panel Admin</span>
+        </div>
+
+        <!-- LOGIN -->
+        @if (!isRegistering()) {
+        <h1>Bienvenido de nuevo</h1>
+        <h2>Inicia sesión para administrar tu tienda</h2>
+
+        <form #loginForm="ngForm" (ngSubmit)="iniciarSesion(loginForm)" novalidate>
+            <label class="field">
+                <span>Usuario</span>
+                <input
+                    type="text"
+                    name="usuario"
+                    placeholder="Ingresa tu usuario"
+                    [(ngModel)]="loginData.usuario"
+                    required
+                    #usuarioField="ngModel">
+                @if (usuarioField.invalid && usuarioField.touched) {
+                <small class="field-error">El usuario es obligatorio.</small>
+                }
+            </label>
+
+            <label class="field">
+                <span>Contraseña</span>
+                <input
+                    type="password"
+                    name="contrasena"
+                    placeholder="Ingresa tu contraseña"
+                    [(ngModel)]="loginData.contrasena"
+                    required
+                    minlength="4"
+                    #contrasenaField="ngModel">
+                @if (contrasenaField.invalid && contrasenaField.touched) {
+                <small class="field-error">Mínimo 4 caracteres.</small>
+                }
+            </label>
+
+            @if (errorMessage()) {
+            <p class="form-error" role="alert">{{ errorMessage() }}</p>
+            }
+
+            <div class="buttons">
+                <button type="submit" class="btn-primary" [disabled]="isSubmitting()">
+                    {{ isSubmitting() ? 'Ingresando...' : 'Iniciar sesión' }}
+                </button>
+                <button type="button" class="btn-secondary" (click)="showRegister()">
+                    Registrarse
+                </button>
+            </div>
+        </form>
+        }
+
+        <!-- REGISTRO -->
+        @if (isRegistering()) {
+        <h1>Crea tu cuenta</h1>
+        <h2>Regístrate para empezar a administrar</h2>
+
+        <form #registerForm="ngForm" (ngSubmit)="crearCuenta(registerForm)" novalidate>
+            <label class="field">
+                <span>Usuario</span>
+                <input
+                    type="text"
+                    name="usuario"
+                    placeholder="Ingresa un usuario"
+                    [(ngModel)]="registerData.usuario"
+                    required>
+            </label>
+
+            <label class="field">
+                <span>Correo</span>
+                <input
+                    type="email"
+                    name="correo"
+                    placeholder="Ingresa tu correo"
+                    [(ngModel)]="registerData.correo"
+                    required
+                    email>
+            </label>
+
+            <label class="field">
+                <span>Contraseña</span>
+                <input
+                    type="password"
+                    name="contrasena"
+                    placeholder="Ingresa una contraseña"
+                    [(ngModel)]="registerData.contrasena"
+                    required
+                    minlength="4">
+            </label>
+
+            <label class="field">
+                <span>Confirmar contraseña</span>
+                <input
+                    type="password"
+                    name="confirmarContrasena"
+                    placeholder="Confirma tu contraseña"
+                    [(ngModel)]="registerData.confirmarContrasena"
+                    required>
+            </label>
+
+            @if (errorMessage()) {
+            <p class="form-error" role="alert">{{ errorMessage() }}</p>
+            }
+
+            <div class="buttons">
+                <button type="submit" class="btn-primary" [disabled]="isSubmitting()">
+                    {{ isSubmitting() ? 'Creando...' : 'Crear cuenta' }}
+                </button>
+                <button type="button" class="btn-secondary" (click)="cancelRegister()">
+                    Cancelar
+                </button>
+            </div>
+        </form>
+        }
+    </div>
+</div>
