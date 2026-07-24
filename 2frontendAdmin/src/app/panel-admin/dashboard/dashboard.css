@@ -1,0 +1,116 @@
+.dashboard-card {
+    background: var(--color-surface, #fff);
+    border: 1px solid var(--color-border, #e5e7eb);
+    border-radius: var(--radius-md, 14px);
+    box-shadow: var(--shadow-sm, 0 1px 2px rgba(16, 24, 40, .06));
+
+    padding: 22px 24px 20px;
+}
+
+.chart-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.view-switch {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    background: #f4f5fb;
+    border: 1px solid var(--color-border, #e5e7eb);
+    border-radius: var(--radius-sm, 8px);
+    padding: 4px;
+}
+
+.view-btn {
+    border: none;
+    background: transparent;
+    color: var(--color-text-muted, #6b7280);
+
+    padding: 7px 16px;
+    border-radius: 6px;
+
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: background .15s, color .15s;
+}
+
+.view-btn:hover {
+    color: var(--color-primary, #4338ca);
+}
+
+.view-btn.active {
+    background: var(--color-primary, #4338ca);
+    color: #fff;
+}
+
+.month-select {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.month-select label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-muted, #6b7280);
+}
+
+.month-select select {
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid var(--color-border, #e5e7eb);
+    border-radius: var(--radius-sm, 8px);
+    font-size: 13.5px;
+    font-family: inherit;
+    color: var(--color-text, #1e1b3a);
+    background: #fff;
+}
+
+.chart-total {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-left: auto;
+    gap: 2px;
+}
+
+.chart-total-label {
+    font-size: 12px;
+    color: var(--color-text-muted, #6b7280);
+    font-weight: 500;
+}
+
+.chart-total-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-text, #1e1b3a);
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 340px;
+    width: 100%;
+}
+
+@media (max-width: 640px) {
+    .chart-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .chart-total {
+        align-items: flex-start;
+        margin-left: 0;
+    }
+
+    .chart-wrapper {
+        height: 280px;
+    }
+}

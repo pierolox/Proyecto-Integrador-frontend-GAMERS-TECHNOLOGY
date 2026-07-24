@@ -1,0 +1,181 @@
+<div class="toolbar">
+    <div class="toolbar-search">
+        <input
+            type="text"
+            placeholder="Buscar producto por nombre..."
+            [ngModel]="busqueda()"
+            (ngModelChange)="busqueda.set($event)" />
+    </div>
+
+    <button type="button" class="btn btn-primary" (click)="abrirNuevo()">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Nuevo Producto
+    </button>
+</div>
+
+<div class="table-card">
+    <div class="table-scroll">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Categoría</th>
+                    <th>Subcategoría</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (p of productosFiltrados(); track p.id) {
+                <tr>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            @if (p.imagen) {
+                            <img class="cell-thumb" [src]="p.imagen" [alt]="p.nombre" />
+                            } @else {
+                            <div class="cell-thumb" style="display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--color-primary);">
+                                {{ iniciales(p.nombre) }}
+                            </div>
+                            }
+                            <div>
+                                <div class="cell-title">{{ p.nombre }}</div>
+                                <div class="cell-sub">{{ p.descripcion }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ nombreCategoria(p.categoriaId) }}</td>
+                    <td>{{ nombreSubcategoria(p.subcategoriaId) }}</td>
+                    <td>S/. {{ p.precio.toLocaleString('es-PE') }}</td>
+                    <td>{{ p.stock }}</td>
+                    <td>
+                        <span class="badge" [class.badge-success]="p.estado === 'Activo'" [class.badge-muted]="p.estado === 'Inactivo'">
+                            {{ p.estado }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="row-actions">
+                            <button type="button" class="icon-btn" title="Editar" (click)="abrirEditar(p)">
+                                <svg viewBox="0 0 24 24" fill="none"><path d="M4 20L4.7 16.7L15.3 6.1C15.7 5.7 16.3 5.7 16.7 6.1L17.9 7.3C18.3 7.7 18.3 8.3 17.9 8.7L7.3 19.3L4 20Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+                            </button>
+                            <button type="button" class="icon-btn danger" title="Eliminar" (click)="abrirEliminar(p)">
+                                <svg viewBox="0 0 24 24" fill="none"><path d="M4 7H20M9 7V4.8C9 4.4 9.4 4 9.8 4H14.2C14.6 4 15 4.4 15 4.8V7M6 7L6.8 19C6.9 19.6 7.4 20 8 20H16C16.6 20 17.1 19.6 17.2 19L18 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                } @empty {
+                <tr class="empty-row">
+                    <td colspan="7">No se encontraron productos.</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- MODAL: crear / editar producto -->
+@if (modalAbierto()) {
+<div class="modal-overlay" (click)="cerrarModal()">
+    <div class="modal modal-lg" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3>{{ modoEdicion() ? 'Editar Producto' : 'Nuevo Producto' }}</h3>
+            <button type="button" class="modal-close" (click)="cerrarModal()">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <form class="form-grid" (ngSubmit)="guardar()">
+                <div class="form-group full">
+                    <label for="prodNombre">Nombre</label>
+                    <input id="prodNombre" type="text" name="nombre" [(ngModel)]="form.nombre" placeholder="Ej. AMD Ryzen 7 7800X3D" required />
+                </div>
+
+                <div class="form-group full">
+                    <label for="prodDescripcion">Descripción</label>
+                    <textarea id="prodDescripcion" name="descripcion" [(ngModel)]="form.descripcion" placeholder="Describe el producto..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="prodPrecio">Precio (S/.)</label>
+                    <input id="prodPrecio" type="number" min="0" step="0.01" name="precio" [(ngModel)]="form.precio" />
+                </div>
+
+                <div class="form-group">
+                    <label for="prodStock">Stock</label>
+                    <input id="prodStock" type="number" min="0" name="stock" [(ngModel)]="form.stock" />
+                </div>
+
+                <div class="form-group">
+                    <label for="prodCategoria">Categoría</label>
+                    <select id="prodCategoria" name="categoriaId" [(ngModel)]="form.categoriaId" (ngModelChange)="onCategoriaChange()">
+                        <option [ngValue]="0" disabled>Selecciona una categoría</option>
+                        @for (c of categorias; track c.id) {
+                        <option [ngValue]="c.id">{{ c.nombre }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="prodSubcategoria">Subcategoría</label>
+                    <select id="prodSubcategoria" name="subcategoriaId" [(ngModel)]="form.subcategoriaId">
+                        <option [ngValue]="0" disabled>Selecciona una subcategoría</option>
+                        @for (s of subcategoriasDisponibles(); track s.id) {
+                        <option [ngValue]="s.id">{{ s.nombre }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="prodImagen">Imagen (URL)</label>
+                    <input id="prodImagen" type="text" name="imagen" [(ngModel)]="form.imagen" placeholder="https://..." />
+                    <span class="form-hint">Puedes dejarlo vacío para usar una imagen de ejemplo.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="prodEstado">Estado</label>
+                    <select id="prodEstado" name="estado" [(ngModel)]="form.estado">
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline" (click)="cerrarModal()">Cancelar</button>
+            <button type="button" class="btn btn-primary" (click)="guardar()">
+                {{ modoEdicion() ? 'Actualizar' : 'Guardar' }}
+            </button>
+        </div>
+    </div>
+</div>
+}
+
+<!-- MODAL: confirmar eliminación -->
+@if (productoAEliminar(); as producto) {
+<div class="modal-overlay" (click)="cerrarEliminar()">
+    <div class="modal modal-sm" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3>Eliminar Producto</h3>
+            <button type="button" class="modal-close" (click)="cerrarEliminar()">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="confirm-icon">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M12 9V13M12 17H12.01M10.3 3.9L2.5 17.5C2.1 18.2 2.6 19 3.4 19H20.6C21.4 19 21.9 18.2 21.5 17.5L13.7 3.9C13.3 3.2 12.7 3.2 12.3 3.9Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+            </div>
+            <p class="confirm-text">
+                ¿Está seguro de que desea eliminar el producto <strong>{{ producto.nombre }}</strong>? Esta acción no se puede deshacer.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline" (click)="cerrarEliminar()">Cancelar</button>
+            <button type="button" class="btn btn-danger" (click)="confirmarEliminar()">Eliminar</button>
+        </div>
+    </div>
+</div>
+}
