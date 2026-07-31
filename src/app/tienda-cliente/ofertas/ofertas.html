@@ -1,0 +1,19 @@
+<section class="pagina-seccion">
+  <div class="contenedor">
+    <p class="eyebrow">Promociones</p>
+    <h1>Ofertas destacadas</h1>
+    <p class="descripcion">Aprovecha descuentos limitados en productos seleccionados para tu setup.</p>
+
+    <div class="grid-productos">
+      @for (producto of productos; track producto.id) {
+      <article class="card-producto">
+        <div class="icono">{{ producto.icono }}</div>
+        <h3>{{ producto.nombre }}</h3>
+        <p class="categoria">{{ producto.categoria }}</p>
+        <p class="precio-anterior">Antes S/ {{ producto.precioAnterior?.toFixed(2) }}</p>
+        <p class="precio">Ahora S/ {{ producto.precio.toFixed(2) }}</p>
+      </article>
+      }
+    </div>
+  </div>
+</section>

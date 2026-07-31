@@ -1,0 +1,120 @@
+<div class="login-container">
+    <div class="backdrop"></div>
+    <div class="noise"></div>
+
+    <div class="login-card">
+
+        <!-- LOGIN -->
+        @if (!isRegistering()) {
+        <h1>Bienvenido de nuevo</h1>
+        <h2>Inicia sesión para comenzar a comprar</h2>
+
+        <form #loginForm="ngForm" (ngSubmit)="iniciarSesion(loginForm)" novalidate>
+            <label class="field">
+                <span>Usuario</span>
+                <input
+                    type="text"
+                    name="usuario"
+                    placeholder="Ingresa tu usuario"
+                    [(ngModel)]="loginData.usuario"
+                    required
+                    #usuarioField="ngModel">
+                @if (usuarioField.invalid && usuarioField.touched) {
+                <small class="field-error">El usuario es obligatorio.</small>
+                }
+            </label>
+
+            <label class="field">
+                <span>Contraseña</span>
+                <input
+                    type="password"
+                    name="contrasena"
+                    placeholder="Ingresa tu contraseña"
+                    [(ngModel)]="loginData.contrasena"
+                    required
+                    minlength="4"
+                    #contrasenaField="ngModel">
+                @if (contrasenaField.invalid && contrasenaField.touched) {
+                <small class="field-error">Mínimo 4 caracteres.</small>
+                }
+            </label>
+
+            @if (errorMessage()) {
+            <p class="form-error" role="alert">{{ errorMessage() }}</p>
+            }
+
+            <div class="buttons">
+                <button type="submit" class="btn-primary" [disabled]="isSubmitting()">
+                    {{ isSubmitting() ? 'Ingresando...' : 'Iniciar sesión' }}
+                </button>
+                <button type="button" class="btn-secondary" (click)="showRegister()">
+                    Registrarse
+                </button>
+            </div>
+        </form>
+        }
+
+        <!-- REGISTRO -->
+        @if (isRegistering()) {
+        <h1>Crea tu cuenta</h1>
+        <h2>Regístrate para empezar a administrar</h2>
+
+        <form #registerForm="ngForm" (ngSubmit)="crearCuenta(registerForm)" novalidate>
+            <label class="field">
+                <span>Usuario</span>
+                <input
+                    type="text"
+                    name="usuario"
+                    placeholder="Ingresa un usuario"
+                    [(ngModel)]="registerData.usuario"
+                    required>
+            </label>
+
+            <label class="field">
+                <span>Correo</span>
+                <input
+                    type="email"
+                    name="correo"
+                    placeholder="Ingresa tu correo"
+                    [(ngModel)]="registerData.correo"
+                    required
+                    email>
+            </label>
+
+            <label class="field">
+                <span>Contraseña</span>
+                <input
+                    type="password"
+                    name="contrasena"
+                    placeholder="Ingresa una contraseña"
+                    [(ngModel)]="registerData.contrasena"
+                    required
+                    minlength="4">
+            </label>
+
+            <label class="field">
+                <span>Confirmar contraseña</span>
+                <input
+                    type="password"
+                    name="confirmarContrasena"
+                    placeholder="Confirma tu contraseña"
+                    [(ngModel)]="registerData.confirmarContrasena"
+                    required>
+            </label>
+
+            @if (errorMessage()) {
+            <p class="form-error" role="alert">{{ errorMessage() }}</p>
+            }
+
+            <div class="buttons">
+                <button type="submit" class="btn-primary" [disabled]="isSubmitting()">
+                    {{ isSubmitting() ? 'Creando...' : 'Crear cuenta' }}
+                </button>
+                <button type="button" class="btn-secondary" (click)="cancelRegister()">
+                    Cancelar
+                </button>
+            </div>
+        </form>
+        }
+    </div>
+</div>

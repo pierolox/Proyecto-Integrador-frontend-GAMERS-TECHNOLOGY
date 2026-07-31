@@ -1,0 +1,33 @@
+<header class="site-header">
+  <div class="top-bar">
+    <div class="logo" routerLink="/" (click)="cerrarMenu()">
+      <span class="logo-icon">🎮</span>
+      <span class="logo-text">GAMERS <strong>TECHNOLOGY</strong></span>
+    </div>
+
+    <button class="menu-toggle" (click)="toggleMenu()" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav" [class.open]="menuAbierto()">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
+        (click)="cerrarMenu()">Inicio</a>
+      <a routerLink="/productos" routerLinkActive="active" (click)="cerrarMenu()">Productos</a>
+      <a routerLink="/ofertas" routerLinkActive="active" (click)="cerrarMenu()">Ofertas</a>
+      <a routerLink="/nosotros" routerLinkActive="active" (click)="cerrarMenu()">Nosotros</a>
+      <a routerLink="/contactanos" routerLinkActive="active" (click)="cerrarMenu()">Contáctanos</a>
+    </nav>
+
+    <div class="acciones">
+      <a class="btn-icono" routerLink="/busqueda" routerLinkActive="active" aria-label="Buscar"
+        (click)="cerrarMenu()">🔍</a>
+      <a class="btn-carrito" routerLink="/carrito" routerLinkActive="active" aria-label="Ir al carrito"
+        (click)="cerrarMenu()">
+        🛒
+        @if (cantidadCarrito() > 0) {
+        <span class="badge">{{ cantidadCarrito() }}</span>
+        }
+      </a>
+    </div>
+  </div>
+</header>

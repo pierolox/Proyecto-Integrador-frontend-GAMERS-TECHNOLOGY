@@ -1,0 +1,249 @@
+.contenedor {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    grid-template-rows: 72px 1fr;
+    height: 100vh;
+    background: var(--color-bg, #f4f5fb);
+}
+
+/* HEADER */
+.header {
+    grid-column: 1 / 3;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 28px;
+
+    background: linear-gradient(120deg, #1e1b3a, #312e81);
+    color: white;
+
+    box-shadow: var(--shadow-sm, 0 1px 2px rgba(16, 24, 40, .06));
+    z-index: 5;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-badge {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-accent, #22d3ee);
+}
+
+.logo-badge svg {
+    width: 100%;
+    height: 100%;
+}
+
+.header h1 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: .01em;
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+
+    padding: 9px 16px;
+    border-radius: var(--radius-sm, 8px);
+
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+
+    transition: background .15s;
+}
+
+.logout-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.logout-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+/* SIDEBAR */
+.sidebar {
+    background: var(--color-surface, #fff);
+    border-right: 1px solid var(--color-border, #e5e7eb);
+
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    padding: 18px 12px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    height: 46px;
+    padding: 0 14px;
+
+    border: none;
+    border-radius: var(--radius-sm, 8px);
+
+    background: transparent;
+    color: var(--color-text-muted, #6b7280);
+
+    font-size: 15px;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+
+    transition: background .15s, color .15s;
+}
+
+.nav-item .icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    flex-shrink: 0;
+}
+
+.nav-item .icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.nav-item:hover {
+    background: #ececfb;
+    color: var(--color-primary, #4338ca);
+}
+
+.nav-item.active {
+    background: var(--color-primary, #4338ca);
+    color: white;
+}
+
+/* CONTENIDO */
+.contenido {
+    padding: 28px 32px;
+    overflow-y: auto;
+}
+
+.section-header {
+    margin-bottom: 24px;
+}
+
+.section-header h2 {
+    margin: 0 0 4px;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-text, #1e1b3a);
+}
+
+.section-header p {
+    margin: 0;
+    color: var(--color-text-muted, #6b7280);
+    font-size: 14.5px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    background: var(--color-surface, #fff);
+    border: 1px solid var(--color-border, #e5e7eb);
+    border-radius: var(--radius-md, 14px);
+
+    padding: 20px;
+    box-shadow: var(--shadow-sm, 0 1px 2px rgba(16, 24, 40, .06));
+}
+
+.stat-label {
+    font-size: 13.5px;
+    color: var(--color-text-muted, #6b7280);
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--color-text, #1e1b3a);
+}
+
+.stat-trend {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--color-success, #16a34a);
+}
+
+.stat-trend.negative {
+    color: var(--color-danger, #ef4444);
+}
+
+.panel-placeholder {
+    background: var(--color-surface, #fff);
+    border: 1px dashed var(--color-border, #e5e7eb);
+    border-radius: var(--radius-md, 14px);
+
+    padding: 48px 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    color: var(--color-text-muted, #6b7280);
+    font-size: 14.5px;
+    min-height: 220px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 860px) {
+    .contenedor {
+        grid-template-columns: 76px 1fr;
+    }
+
+    .nav-item .label {
+        display: none;
+    }
+
+    .nav-item {
+        justify-content: center;
+        padding: 0;
+    }
+
+    .header h1 {
+        font-size: 15px;
+    }
+
+    .logout-btn span,
+    .logout-btn {
+        font-size: 0;
+        gap: 0;
+        padding: 9px;
+    }
+
+    .logout-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+}

@@ -1,0 +1,167 @@
+:host {
+  display: flex;
+  flex: 1;
+}
+
+.carrito-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  background: linear-gradient(135deg, #020617 0%, #111827 100%);
+  width: 100%;
+}
+
+.carrito-card {
+  width: min(100%, 560px);
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  font-size: 0.75rem;
+  color: #f59e0b;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.carrito-card h1 {
+  margin: 0 0 0.75rem;
+  color: #111827;
+  font-size: 1.8rem;
+}
+
+.descripcion {
+  color: #4b5563;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.carrito-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e5e7eb;
+  gap: 1rem;
+}
+
+.carrito-item h3 {
+  margin: 0 0 0.3rem;
+  color: #111827;
+}
+
+.carrito-item p {
+  margin: 0;
+  color: #6b7280;
+}
+
+.acciones-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.precio {
+  font-weight: 700;
+  color: #111827;
+}
+
+.btn-quitar {
+  border: none;
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  background: #fee2e2;
+  color: #b91c1c;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.carrito-vacio {
+  padding: 1rem 0 1.2rem;
+  color: #6b7280;
+}
+
+.carrito-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1.2rem 0 1.5rem;
+  font-size: 1.05rem;
+  color: #111827;
+}
+
+.btn-finalizar {
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  padding: 0.95rem 1.2rem;
+  background: linear-gradient(135deg, #f59e0b, #fb923c);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-finalizar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Modal pago */
+.modal-pago-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2,6,23,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+}
+
+.modal-pago {
+  width: min(640px, 94%);
+  background: #fff;
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: 0 30px 80px rgba(2,6,23,0.6);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-pago header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #eef2ff;
+}
+
+.modal-pago h2 { margin: 0; }
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.modal-body { padding: 1rem 0; color: #111827; }
+.metodos { display: flex; gap: 0.6rem; margin: 0.6rem 0; }
+.metodo { padding: 0.6rem 0.9rem; border-radius: 12px; border: 1px solid #e6edf3; background: #f8fafc; cursor: pointer; }
+.metodo.activo { background: linear-gradient(135deg,#6366f1,#22d3ee); color: white; border-color: transparent; }
+
+.form-tarjeta { display: grid; grid-template-columns: 1fr 120px 80px; gap: 0.5rem; }
+.form-tarjeta label { display: flex; flex-direction: column; gap: 0.3rem; font-weight: 600; }
+.form-tarjeta input { padding: 0.5rem; border-radius: 8px; border: 1px solid #e5e7eb; }
+
+.modal-pago footer { display:flex; gap:0.6rem; justify-content:flex-end; padding-top:0.5rem; border-top:1px solid #eef2ff; }
+.btn-cancel { background: transparent; border: 1px solid #e5e7eb; padding: 0.55rem 0.9rem; border-radius: 999px; cursor: pointer; }
+.btn-confirmar { background: linear-gradient(135deg,#f59e0b,#fb923c); color: white; border: none; padding: 0.55rem 0.9rem; border-radius: 999px; cursor: pointer; }
+.btn-confirmar:disabled { opacity: 0.6; cursor:not-allowed; }
+
+.aceptados { align-self: center; color: #374151; font-size: 0.95rem; margin-right: 0.5rem; }

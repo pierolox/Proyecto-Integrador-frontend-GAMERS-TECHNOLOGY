@@ -1,0 +1,41 @@
+<div class="dashboard-card">
+
+    <div class="chart-toolbar">
+        <div class="view-switch">
+            @for (op of opciones; track op.id) {
+            <button
+                type="button"
+                class="view-btn"
+                [class.active]="vista() === op.id"
+                (click)="cambiarVista(op.id)">
+                {{ op.label }}
+            </button>
+            }
+        </div>
+
+        @if (vista() === 'mes') {
+        <div class="month-select">
+            <label for="mesSelect">Mes</label>
+            <select id="mesSelect" [(ngModel)]="mesSeleccionado">
+                @for (m of meses; track m) {
+                <option [value]="m">{{ m }}</option>
+                }
+            </select>
+        </div>
+        }
+
+        <div class="chart-total">
+            <span class="chart-total-label">Total del período</span>
+            <span class="chart-total-value">{{ formatearSoles(totalPeriodo()) }}</span>
+        </div>
+    </div>
+
+    <div class="chart-wrapper">
+        <canvas
+            baseChart
+            [data]="chartData()"
+            [options]="chartOptions"
+            [type]="chartType">
+        </canvas>
+    </div>
+</div>

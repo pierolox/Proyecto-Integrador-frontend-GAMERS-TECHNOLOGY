@@ -1,0 +1,252 @@
+.franja-superior {
+  height: 6px;
+  background: linear-gradient(90deg, #4338ca, #22d3ee);
+}
+
+.contenedor {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 2rem;
+}
+
+/* ---- filtros ---- */
+.filtros {
+  border-right: 1px solid var(--color-border);
+  padding-right: 1.25rem;
+}
+
+.filtros h4 {
+  margin: 0 0 0.9rem;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.filtro-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 0.55rem 0.6rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+  cursor: pointer;
+  margin-bottom: 0.15rem;
+}
+
+.filtro-item:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.filtro-item.activo {
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+.punto-color {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ---- encabezado ---- */
+.encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.4rem;
+}
+
+.encabezado h1 {
+  font-size: 1.6rem;
+  margin: 0;
+  color: var(--color-text);
+}
+
+.orden {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.orden select {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.resultados {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  margin: 0 0 1.5rem;
+}
+
+/* ---- grilla ---- */
+.grilla-productos {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.producto-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+
+.producto-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+
+.producto-imagen {
+  height: 140px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+  margin-bottom: 0.8rem;
+  position: relative;
+}
+
+.etiqueta {
+  position: absolute;
+  top: 0.55rem;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 0.18rem 0.5rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.etiqueta-nuevo {
+  left: 0.55rem;
+  background: #22d3ee;
+  color: #101126;
+}
+
+.etiqueta-descuento {
+  right: 0.55rem;
+  background: #ef4444;
+  color: #fff;
+}
+
+.categoria-chip {
+  display: inline-block;
+  background: var(--color-bg);
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  margin: 0 0 0.4rem;
+}
+
+.producto-card h3 {
+  font-size: 0.92rem;
+  margin: 0 0 0.4rem;
+  color: var(--color-text);
+  min-height: 2.3em;
+}
+
+.rating {
+  color: #d1d5db;
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.rating .lleno {
+  color: #f59e0b;
+}
+
+.rating-num {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  margin-left: 0.2rem;
+}
+
+.precios {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.7rem;
+}
+
+.precio {
+  font-weight: 800;
+  color: var(--color-primary);
+  font-size: 1.05rem;
+}
+
+.precio-anterior {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+}
+
+.btn-agregar {
+  width: 100%;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  padding: 0.6rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-agregar:hover {
+  background: var(--color-primary-dark);
+}
+
+.sin-resultados {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: 3rem 0;
+}
+
+@media (max-width: 1024px) {
+  .grilla-productos { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 860px) {
+  .contenedor { grid-template-columns: 1fr; }
+  .filtros {
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    padding-right: 0;
+    padding-bottom: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .filtro-item { width: auto; }
+  .grilla-productos { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 520px) {
+  .grilla-productos { grid-template-columns: 1fr; }
+}

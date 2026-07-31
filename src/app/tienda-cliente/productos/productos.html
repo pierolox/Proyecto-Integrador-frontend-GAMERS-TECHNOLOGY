@@ -1,0 +1,67 @@
+<section class="page-productos">
+  <div class="franja-superior"></div>
+
+  <div class="contenedor">
+    <aside class="filtros">
+      <h4>Categorías</h4>
+      <button class="filtro-item" [class.activo]="categoriaActiva() === null" (click)="filtrarPorCategoria(null)">
+        Todas las categorías
+      </button>
+      @for (cat of categorias; track cat.id) {
+      <button class="filtro-item" [class.activo]="categoriaActiva() === cat.nombre" (click)="filtrarPorCategoria(cat.nombre)">
+        <span class="punto-color" [style.background]="cat.colorInicio"></span>
+        {{ cat.nombre }}
+      </button>
+      }
+    </aside>
+
+    <div class="contenido-productos">
+      <div class="encabezado">
+        <h1>{{ tituloPagina() }}</h1>
+        <div class="orden">
+          <label for="orden">Ordenar por</label>
+          <select id="orden" (change)="cambiarOrden($any($event.target).value)">
+            <option value="relevancia">Relevancia</option>
+            <option value="precio-asc">Precio: menor a mayor</option>
+            <option value="precio-desc">Precio: mayor a menor</option>
+          </select>
+        </div>
+      </div>
+
+      <p class="resultados">{{ productosFiltrados.length }} producto(s) encontrado(s)</p>
+
+      <div class="grilla-productos">
+        @for (p of productosFiltrados; track p.id) {
+        <div class="producto-card">
+          <div class="producto-imagen" [style.background]="'linear-gradient(135deg,' + p.colorInicio + ',' + p.colorFin + ')'">
+            @if (p.esNuevo) {
+            <span class="etiqueta etiqueta-nuevo">Nuevo</span>
+            }
+            @if (p.descuento) {
+            <span class="etiqueta etiqueta-descuento">-{{ p.descuento }}%</span>
+            }
+            <span class="producto-icono">{{ p.icono }}</span>
+          </div>
+          <p class="categoria-chip">{{ p.categoria }}</p>
+          <h3>{{ p.nombre }}</h3>
+          <div class="rating">
+            @for (e of [1,2,3,4,5]; track e) {
+            <span [class.lleno]="e <= p.rating">★</span>
+            }
+            <span class="rating-num">({{ p.rating }})</span>
+          </div>
+          <div class="precios">
+            <span class="precio">S/ {{ p.precio.toFixed(2) }}</span>
+            @if (p.precioAnterior) {
+            <span class="precio-anterior">S/ {{ p.precioAnterior.toFixed(2) }}</span>
+            }
+          </div>
+          <button class="btn-agregar">Agregar al carrito</button>
+        </div>
+        } @empty {
+        <p class="sin-resultados">No hay productos en esta categoría por el momento.</p>
+        }
+      </div>
+    </div>
+  </div>
+</section>

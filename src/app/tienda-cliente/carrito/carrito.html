@@ -1,0 +1,86 @@
+<section class="carrito-panel">
+  <div class="carrito-card">
+    <p class="eyebrow">Tu compra</p>
+    <h1>Carrito de compras</h1>
+    <p class="descripcion">Revisa tus productos seleccionados y continúa con tu pedido.</p>
+
+    @if (productos.length === 0) {
+    <div class="carrito-vacio">
+      <p>Tu carrito está vacío.</p>
+    </div>
+    } @else {
+    @for (producto of productos; track producto.id) {
+    <div class="carrito-item">
+      <div>
+        <h3>{{ producto.nombre }}</h3>
+        <p>{{ producto.detalle }}</p>
+      </div>
+      <div class="acciones-item">
+        <span class="precio">S/ {{ (producto.precio * producto.cantidad).toFixed(2) }}</span>
+        <button class="btn-quitar" (click)="quitarProducto(producto.id)">Quitar</button>
+      </div>
+    </div>
+    }
+    }
+
+    <div class="carrito-total">
+      <span>Total</span>
+      <strong>S/ {{ total.toFixed(2) }}</strong>
+    </div>
+
+    <button class="btn-finalizar" [disabled]="productos.length === 0" (click)="abrirMetodoPago()">Finalizar compra</button>
+  </div>
+</section>
+
+@if (showPago) {
+<div class="modal-pago-overlay">
+  <div class="modal-pago">
+    <header>
+      <h2>Método de pago</h2>
+      <button class="modal-close" (click)="cerrarMetodoPago()">✕</button>
+    </header>
+
+    <div class="modal-body">
+      <p>Selecciona un método de pago para completar tu compra.</p>
+
+      <div class="metodos">
+        <button class="metodo" [class.activo]="metodoSeleccionado === 'tarjeta'" (click)="seleccionarMetodo('tarjeta')">Tarjeta de crédito / débito</button>
+        <button class="metodo" [class.activo]="metodoSeleccionado === 'yape'" (click)="seleccionarMetodo('yape')">Yape</button>
+        <button class="metodo" [class.activo]="metodoSeleccionado === 'contraentrega'" (click)="seleccionarMetodo('contraentrega')">Contraentrega (Efectivo)</button>
+      </div>
+
+      @if (metodoSeleccionado === 'tarjeta') {
+      <form class="form-tarjeta">
+        <label>
+          Número de tarjeta
+          <input type="text" placeholder="1234 5678 9012 3456" />
+        </label>
+        <label>
+          MM/AA
+          <input type="text" placeholder="MM/AA" />
+        </label>
+        <label>
+          CVC
+          <input type="text" placeholder="CVC" />
+        </label>
+      </form>
+      }
+
+      @if (metodoSeleccionado === 'yape') {
+      <p>Usa Yape para pagar desde tu app móvil. Escanea el código QR o envía al número asociado.</p>
+      }
+
+      @if (metodoSeleccionado === 'contraentrega') {
+      <p>Paga en efectivo al momento de la entrega (Contraentrega).</p>
+      }
+    </div>
+
+    <footer>
+      <div class="aceptados">Aceptamos: <strong>Visa</strong> · <strong>Mastercard</strong> · <strong>Yape</strong> · <strong>Plin</strong></div>
+      <div style="flex:1"></div>
+      <button class="btn-cancel" (click)="cerrarMetodoPago()">Cancelar</button>
+      <button class="btn-confirmar" [disabled]="!metodoSeleccionado" (click)="confirmarCompra()">Confirmar y pagar</button>
+    </footer>
+  </div>
+</div>
+}

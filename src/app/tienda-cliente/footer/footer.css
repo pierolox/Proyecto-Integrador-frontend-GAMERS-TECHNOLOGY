@@ -1,0 +1,126 @@
+.site-footer {
+  background: #150c2e;
+  color: rgba(255, 255, 255, 0.75);
+  margin-top: 4rem;
+}
+
+.footer-top {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 2rem;
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  gap: 2rem;
+}
+
+.footer-col h4 {
+  color: #fff;
+  font-size: 0.95rem;
+  margin: 0 0 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.footer-col a,
+.footer-col p {
+  display: block;
+  color: rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-bottom: 0.65rem;
+  line-height: 1.5;
+}
+
+.footer-col a:hover {
+  color: #22d3ee;
+}
+
+.marca .logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+
+.marca .logo-icon {
+  font-size: 1.4rem;
+}
+
+.marca .logo-text {
+  color: #fff;
+  font-weight: 500;
+}
+
+.marca .logo-text strong {
+  color: #22d3ee;
+  font-weight: 800;
+}
+
+.marca p {
+  max-width: 320px;
+}
+
+.redes {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.redes a {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: background 0.15s;
+}
+
+.redes a:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.footer-pagos {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.metodo {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.3rem 0.7rem;
+  border-radius: 8px;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding: 1.1rem 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.82rem;
+}
+
+.footer-bottom p {
+  margin: 0;
+}
+
+@media (max-width: 860px) {
+  .footer-top {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .footer-top {
+    grid-template-columns: 1fr;
+  }
+}
