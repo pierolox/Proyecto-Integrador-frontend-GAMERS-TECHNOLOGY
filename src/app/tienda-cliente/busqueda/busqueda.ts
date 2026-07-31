@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
-import { PRODUCTOS } from '../data/mock-data';
+import {
+  PRODUCTOS,
+  SUBCATEGORIAS,
+  Subcategoria
+} from '../data/mock-data';
 
 @Component({
   selector: 'app-busqueda',
@@ -8,6 +12,14 @@ import { PRODUCTOS } from '../data/mock-data';
   templateUrl: './busqueda.html',
   styleUrl: './busqueda.css',
 })
+
 export class Busqueda {
   productos = PRODUCTOS;
+  subcategorias: Subcategoria[] = SUBCATEGORIAS;
+
+  obtenerNombreSubcategoria(id: number): string {
+    return this.subcategorias.find(
+      s => s.id === id
+    )?.nombre ?? '';
+  }
 }

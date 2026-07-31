@@ -1,6 +1,13 @@
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { CATEGORIAS, Categoria, PRODUCTOS, Producto } from '../data/mock-data';
+import {
+  CATEGORIAS,
+  SUBCATEGORIAS,
+  PRODUCTOS,
+  Categoria,
+  Subcategoria,
+  Producto
+} from '../data/mock-data';
 
 interface Slide {
   titulo: string;
@@ -28,6 +35,7 @@ export class Home implements OnInit, OnDestroy {
   private intervalId: any;
 
   categorias: Categoria[] = CATEGORIAS;
+  subcategorias: Subcategoria[] = SUBCATEGORIAS;
   indiceCategorias = signal(0);
   categoriasVisibles = signal(4);
 
@@ -35,7 +43,25 @@ export class Home implements OnInit, OnDestroy {
   indiceProductos = signal(0);
   productosVisibles = signal(4);
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
+
+  obtenerCantidadProductos(categoriaId: number): number {
+
+    const subIds = this.subcategorias
+      .filter(s => s.categoriaId === categoriaId)
+      .map(s => s.id);
+
+    return PRODUCTOS.filter(p =>
+      subIds.includes(p.subcategoriaId)
+    ).length;
+
+  }
+
+  obtenerNombreSubcategoria(id: number): string {
+
+    return this.subcategorias.find(s => s.id === id)?.nombre ?? '';
+
+  }
 
   ngOnInit() {
     this.actualizarVisibles();
@@ -79,7 +105,12 @@ export class Home implements OnInit, OnDestroy {
   }
 
   verCategoria(cat: Categoria) {
-    this.router.navigate(['/productos'], { queryParams: { categoria: cat.nombre } });
+
+    this.router.navigate(['/productos'], {
+      queryParams: {
+        categoria: cat.id
+      }
+    });
   }
 
   // ---- Carrusel de productos nuevos ----

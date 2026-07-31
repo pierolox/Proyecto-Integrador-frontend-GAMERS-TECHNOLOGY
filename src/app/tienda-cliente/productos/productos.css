@@ -250,3 +250,54 @@
 @media (max-width: 520px) {
   .grilla-productos { grid-template-columns: 1fr; }
 }
+
+.categoria{
+    margin-bottom:10px;
+}
+
+.subcategorias{
+
+    margin-left:18px;
+    margin-top:6px;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:4px;
+
+}
+
+.subcategoria-item{
+
+    background:none;
+    border:none;
+
+    text-align:left;
+
+    cursor:pointer;
+
+    padding:6px 10px;
+
+    border-radius:8px;
+
+    color:#6b7280;
+
+    font-size:.84rem;
+
+}
+
+.subcategoria-item:hover{
+
+    background:#f3f4f6;
+
+}
+
+.subcategoria-item.activo{
+
+    background:#4338ca;
+
+    color:white;
+
+    font-weight:bold;
+
+}

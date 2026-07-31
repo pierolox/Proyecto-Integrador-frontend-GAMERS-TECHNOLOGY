@@ -9,7 +9,9 @@
       <article class="card-producto">
         <div class="icono">{{ producto.icono }}</div>
         <h3>{{ producto.nombre }}</h3>
-        <p class="categoria">{{ producto.categoria }}</p>
+        <p class="categoria">
+          {{ obtenerNombreSubcategoria(producto.subcategoriaId) }}
+        </p>
         <p class="precio">S/ {{ producto.precio.toFixed(2) }}</p>
       </article>
       }
