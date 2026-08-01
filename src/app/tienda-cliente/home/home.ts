@@ -1,13 +1,11 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  CATEGORIAS,
-  SUBCATEGORIAS,
-  PRODUCTOS,
   Categoria,
   Subcategoria,
   Producto
 } from '../data/mock-data';
+import { InventarioService } from '../services/inventario.service';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 
 interface Slide {
   titulo: string;
@@ -34,27 +32,27 @@ export class Home implements OnInit, OnDestroy {
   slideActual = signal(0);
   private intervalId: any;
 
-  categorias: Categoria[] = CATEGORIAS;
-  subcategorias: Subcategoria[] = SUBCATEGORIAS;
+  categorias: Categoria[] = [];
+  subcategorias: Subcategoria[] = [];
+  todosLosProductos: Producto[] = [];
   indiceCategorias = signal(0);
   categoriasVisibles = signal(4);
 
-  productosNuevos: Producto[] = PRODUCTOS.filter((p) => p.esNuevo);
+  productosNuevos: Producto[] = [];
   indiceProductos = signal(0);
   productosVisibles = signal(4);
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private inventario: InventarioService
+  ) { }
 
-  obtenerCantidadProductos(categoriaId: number): number {
+  obtenerCantidadProductos(
+    categoriaId: number
+  ): number {
 
-    const subIds = this.subcategorias
-      .filter(s => s.categoriaId === categoriaId)
-      .map(s => s.id);
-
-    return PRODUCTOS.filter(p =>
-      subIds.includes(p.subcategoriaId)
-    ).length;
-
+    return this.inventario
+      .obtenerCantidadProductosCategoria(categoriaId);
   }
 
   obtenerNombreSubcategoria(id: number): string {
@@ -64,9 +62,23 @@ export class Home implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
+    this.categorias = this.inventario.obtenerCategorias();
+    this.subcategorias = this.inventario.obtenerSubcategorias();
+    this.todosLosProductos = this.inventario.obtenerProductos();
+    this.productosNuevos = this.inventario.obtenerProductosNuevos();
+
     this.actualizarVisibles();
-    window.addEventListener('resize', this.actualizarVisibles);
-    this.intervalId = setInterval(() => this.siguienteSlide(), 6000);
+
+    window.addEventListener(
+      'resize',
+      this.actualizarVisibles
+    );
+
+    this.intervalId = setInterval(
+      () => this.siguienteSlide(),
+      6000
+    );
   }
 
   ngOnDestroy() {

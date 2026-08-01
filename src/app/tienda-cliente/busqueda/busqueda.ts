@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
-import {
-  PRODUCTOS,
-  SUBCATEGORIAS,
-  Subcategoria
-} from '../data/mock-data';
+import { Producto } from '../data/mock-data';
+import { InventarioService } from '../services/inventario.service';
 
 @Component({
   selector: 'app-busqueda',
@@ -12,14 +9,20 @@ import {
   templateUrl: './busqueda.html',
   styleUrl: './busqueda.css',
 })
-
 export class Busqueda {
-  productos = PRODUCTOS;
-  subcategorias: Subcategoria[] = SUBCATEGORIAS;
+
+  productos: Producto[] = [];
+
+  constructor(
+    private inventario: InventarioService
+  ) {
+    this.productos = this.inventario.obtenerProductos();
+  }
 
   obtenerNombreSubcategoria(id: number): string {
-    return this.subcategorias.find(
-      s => s.id === id
-    )?.nombre ?? '';
+
+    return this.inventario
+      .obtenerSubcategorias()
+      .find(s => s.id === id)?.nombre ?? '';
   }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { InventarioService } from '../services/inventario.service';
 
 import {
   CATEGORIAS,
@@ -17,15 +18,16 @@ import {
   templateUrl: './productos.html',
   styleUrl: './productos.css',
 })
+
 export class Productos implements OnInit {
 
   // ============================
   // DATOS
   // ============================
 
-  categorias: Categoria[] = CATEGORIAS;
-  subcategorias: Subcategoria[] = SUBCATEGORIAS;
-  todosLosProductos: Producto[] = PRODUCTOS;
+  categorias: Categoria[] = [];
+  subcategorias: Subcategoria[] = [];
+  todosLosProductos: Producto[] = [];
 
   // ============================
   // ESTADO
@@ -44,17 +46,14 @@ export class Productos implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private inventario: InventarioService
   ) { }
 
   ngOnInit() {
-
-    this.soloNuevos.set(
-      this.router.url.includes('/productos/nuevos')
-    );
-
-    this.actualizarTitulo();
-
+    this.categorias = this.inventario.obtenerCategorias();
+    this.subcategorias = this.inventario.obtenerSubcategorias();
+    this.todosLosProductos = this.inventario.obtenerProductos();
   }
 
   // =====================================================
@@ -67,19 +66,16 @@ export class Productos implements OnInit {
 
       this.categoriaActiva.set(null);
       this.subcategoriaActiva.set(null);
-
     }
     else if (this.categoriaActiva() === id) {
 
       this.categoriaActiva.set(null);
       this.subcategoriaActiva.set(null);
-
     }
     else {
 
       this.categoriaActiva.set(id);
       this.subcategoriaActiva.set(null);
-
     }
 
     this.actualizarTitulo();
@@ -103,9 +99,7 @@ export class Productos implements OnInit {
   filtrarSubcategoria(id: number) {
 
     this.subcategoriaActiva.set(id);
-
     this.actualizarTitulo();
-
   }
 
   obtenerNombreSubcategoria(
@@ -117,7 +111,6 @@ export class Productos implements OnInit {
     );
 
     return sub ? sub.nombre : '';
-
   }
 
   // =====================================================
@@ -125,9 +118,7 @@ export class Productos implements OnInit {
   // =====================================================
 
   actualizarTitulo() {
-
     // NUEVOS
-
     if (this.soloNuevos()) {
 
       this.tituloPagina.set(
@@ -135,7 +126,6 @@ export class Productos implements OnInit {
       );
 
       return;
-
     }
 
     // SUBCATEGORÍA
@@ -151,7 +141,6 @@ export class Productos implements OnInit {
       );
 
       return;
-
     }
 
     // CATEGORÍA
@@ -169,13 +158,11 @@ export class Productos implements OnInit {
       );
 
       return;
-
     }
 
     this.tituloPagina.set(
       'Todos los productos'
     );
-
   }
 
   // =====================================================
@@ -185,9 +172,7 @@ export class Productos implements OnInit {
   cambiarOrden(
     valor: 'relevancia' | 'precio-asc' | 'precio-desc'
   ) {
-
     this.orden.set(valor);
-
   }
 
   // =====================================================
@@ -197,7 +182,6 @@ export class Productos implements OnInit {
   get productosFiltrados(): Producto[] {
 
     let lista = [...this.todosLosProductos];
-
     // SOLO NUEVOS
 
     if (this.soloNuevos()) {
@@ -205,7 +189,6 @@ export class Productos implements OnInit {
       lista = lista.filter(
         p => p.esNuevo
       );
-
     }
 
     // SI HAY CATEGORÍA ABIERTA
@@ -218,7 +201,6 @@ export class Productos implements OnInit {
     ) {
 
       return [];
-
     }
 
     // FILTRAR POR SUBCATEGORÍA
@@ -230,15 +212,12 @@ export class Productos implements OnInit {
           p.subcategoriaId ===
           this.subcategoriaActiva()
       );
-
     }
 
     // ORDENAR
 
     switch (this.orden()) {
-
       case 'precio-asc':
-
         lista.sort(
           (a, b) => a.precio - b.precio
         );
@@ -246,17 +225,13 @@ export class Productos implements OnInit {
         break;
 
       case 'precio-desc':
-
         lista.sort(
           (a, b) => b.precio - a.precio
         );
 
         break;
-
     }
 
     return lista;
-
   }
-
 }
