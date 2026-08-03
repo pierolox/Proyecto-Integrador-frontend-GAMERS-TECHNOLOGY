@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Producto } from '../data/mock-data';
+import { Producto } from '../models/tienda.models';
 import { InventarioService } from '../services/inventario.service';
 
 @Component({

@@ -1,15 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InventarioService } from '../services/inventario.service';
-
-import {
-  CATEGORIAS,
-  SUBCATEGORIAS,
-  PRODUCTOS,
-  Categoria,
-  Subcategoria,
-  Producto
-} from '../data/mock-data';
+import { Categoria, Subcategoria, Producto } from '../models/tienda.models';
 
 @Component({
   selector: 'app-productos',
@@ -54,6 +46,12 @@ export class Productos implements OnInit {
     this.categorias = this.inventario.obtenerCategorias();
     this.subcategorias = this.inventario.obtenerSubcategorias();
     this.todosLosProductos = this.inventario.obtenerProductos();
+
+    this.soloNuevos.set(
+      this.router.url.includes('/productos/nuevos')
+    );
+
+    this.actualizarTitulo();
   }
 
   // =====================================================
@@ -89,11 +87,7 @@ export class Productos implements OnInit {
   obtenerSubcategorias(
     categoriaId: number
   ): Subcategoria[] {
-
-    return this.subcategorias.filter(
-      s => s.categoriaId === categoriaId
-    );
-
+    return this.inventario.obtenerSubcategoriasPorCategoria(categoriaId);
   }
 
   filtrarSubcategoria(id: number) {
@@ -106,11 +100,8 @@ export class Productos implements OnInit {
     subcategoriaId: number
   ): string {
 
-    const sub = this.subcategorias.find(
-      s => s.id === subcategoriaId
-    );
-
-    return sub ? sub.nombre : '';
+    return this.inventario
+      .obtenerNombreSubcategoria(subcategoriaId);
   }
 
   // =====================================================
@@ -181,57 +172,10 @@ export class Productos implements OnInit {
 
   get productosFiltrados(): Producto[] {
 
-    let lista = [...this.todosLosProductos];
-    // SOLO NUEVOS
-
-    if (this.soloNuevos()) {
-
-      lista = lista.filter(
-        p => p.esNuevo
-      );
-    }
-
-    // SI HAY CATEGORÍA ABIERTA
-    // PERO NO HAY SUBCATEGORÍA
-    // NO MOSTRAR PRODUCTOS
-
-    if (
-      this.categoriaActiva() != null &&
-      this.subcategoriaActiva() == null
-    ) {
-
-      return [];
-    }
-
-    // FILTRAR POR SUBCATEGORÍA
-
-    if (this.subcategoriaActiva() != null) {
-
-      lista = lista.filter(
-        p =>
-          p.subcategoriaId ===
-          this.subcategoriaActiva()
-      );
-    }
-
-    // ORDENAR
-
-    switch (this.orden()) {
-      case 'precio-asc':
-        lista.sort(
-          (a, b) => a.precio - b.precio
-        );
-
-        break;
-
-      case 'precio-desc':
-        lista.sort(
-          (a, b) => b.precio - a.precio
-        );
-
-        break;
-    }
-
-    return lista;
+    return this.inventario.obtenerProductosFiltrados(
+      this.subcategoriaActiva(),
+      this.soloNuevos(),
+      this.orden()
+    );
   }
 }

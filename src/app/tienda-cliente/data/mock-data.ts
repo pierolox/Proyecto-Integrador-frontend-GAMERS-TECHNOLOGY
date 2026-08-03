@@ -1,38 +1,4 @@
-export interface Categoria {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  icono: string;
-  colorInicio: string;
-  colorFin: string;
-}
-
-export interface Subcategoria {
-  id: number;
-  categoriaId: number;
-  nombre: string;
-  descripcion: string;
-}
-
-export interface Producto {
-  id: number;
-  subcategoriaId: number;
-
-  nombre: string;
-  descripcion: string;
-
-  precio: number;
-  precioAnterior?: number;
-
-  icono: string;
-
-  colorInicio: string;
-  colorFin: string;
-
-  esNuevo?: boolean;
-  descuento?: number;
-  rating: number;
-}
+import { Categoria, Subcategoria, Producto } from '../models/tienda.models';
 
 export const CATEGORIAS: Categoria[] = [
   { id: 1, nombre: "Periféricos", descripcion: "Mouse, teclados y accesorios", icono: "🖱️", colorInicio: "#6366f1", colorFin: "#4338ca" },

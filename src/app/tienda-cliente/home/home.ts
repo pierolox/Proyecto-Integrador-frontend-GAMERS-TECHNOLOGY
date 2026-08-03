@@ -1,9 +1,5 @@
 import { Router } from '@angular/router';
-import {
-  Categoria,
-  Subcategoria,
-  Producto
-} from '../data/mock-data';
+import { Categoria, Subcategoria, Producto } from '../models/tienda.models';
 import { InventarioService } from '../services/inventario.service';
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 
@@ -34,9 +30,7 @@ export class Home implements OnInit, OnDestroy {
 
   categorias: Categoria[] = [];
   subcategorias: Subcategoria[] = [];
-  todosLosProductos: Producto[] = [];
-  indiceCategorias = signal(0);
-  categoriasVisibles = signal(4);
+  productos: Producto[] = [];
 
   productosNuevos: Producto[] = [];
   indiceProductos = signal(0);
@@ -47,26 +41,23 @@ export class Home implements OnInit, OnDestroy {
     private inventario: InventarioService
   ) { }
 
-  obtenerCantidadProductos(
-    categoriaId: number
-  ): number {
-
-    return this.inventario
-      .obtenerCantidadProductosCategoria(categoriaId);
-  }
-
-  obtenerNombreSubcategoria(id: number): string {
-
-    return this.subcategorias.find(s => s.id === id)?.nombre ?? '';
-
+  obtenerCantidadProductos(categoriaId: number): number {
+    return this.inventario.obtenerCantidadProductosPorCategoria(categoriaId);
   }
 
   ngOnInit() {
 
-    this.categorias = this.inventario.obtenerCategorias();
-    this.subcategorias = this.inventario.obtenerSubcategorias();
-    this.todosLosProductos = this.inventario.obtenerProductos();
-    this.productosNuevos = this.inventario.obtenerProductosNuevos();
+    this.categorias =
+      this.inventario.obtenerCategorias();
+
+    this.subcategorias =
+      this.inventario.obtenerSubcategorias();
+
+    this.productos =
+      this.inventario.obtenerProductos();
+
+    this.productosNuevos =
+      this.inventario.obtenerProductosNuevos();
 
     this.actualizarVisibles();
 
