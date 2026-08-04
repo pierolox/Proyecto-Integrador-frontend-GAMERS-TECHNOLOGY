@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="535f9d7e-a9e0-4f2a-813c-c1986cc55d34" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/.tsbuildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/.tsbuildinfo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/@angular_common.js" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/@angular_common.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/@angular_core.js" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/@angular_core.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/@angular_forms.js" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/@angular_forms.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/@angular_forms.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/@angular_forms.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/@angular_platform-browser.js" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/@angular_platform-browser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/@angular_router.js" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/@angular_router.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/@angular_router.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/@angular_router.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/_metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/_metadata.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/chunk-CJ4PX4IN.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/chunk-CJ4PX4IN.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/chunk-HGPWBMEP.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/chunk-HGPWBMEP.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/chunk-KC7GXYDO.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/chunk-KC7GXYDO.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/ng2-charts.js" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/ng2-charts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/ng2-charts.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/.angular/cache/22.0.8/gamers-technology/vite/deps/ng2-charts.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/tienda-cliente/home/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/tienda-cliente/home/home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/tienda-cliente/home/home.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/tienda-cliente/home/home.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="3HQrdXsqHTeO8jxEDSOLD5AhUEI" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Piero\\Desktop\\GamersTechnology\\node_modules\\typescript\\lib&quot;
+  }
+}</component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-37e91769500f-intellij.indexing.shared.core-IU-261.24374.151" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-IU-261.24374.151" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="535f9d7e-a9e0-4f2a-813c-c1986cc55d34" name="Changes" comment="" />
+      <created>1785811225600</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1785811225600</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

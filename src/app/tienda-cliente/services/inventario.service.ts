@@ -1,22 +1,65 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { CATEGORIAS, SUBCATEGORIAS, PRODUCTOS } from '../data/mock-data';
-import { Categoria, Subcategoria, Producto } from '../models/tienda.models';
+import { Categoria, Subcategoria, Producto } from '../../shared/models/inventario.models';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class InventarioService {
 
+  private categorias = signal<Categoria[]>([
+    ...CATEGORIAS
+  ]);
+
+  private subcategorias = signal<Subcategoria[]>([
+    ...SUBCATEGORIAS
+  ]);
+
+  private productos = signal<Producto[]>([
+    ...PRODUCTOS
+  ]);
+
   obtenerCategorias(): Categoria[] {
-    return CATEGORIAS;
+    return this.categorias();
+  }
+
+  categoriasSignal() {
+    return this.categorias;
+  }
+
+  agregarCategoria(categoria: Categoria) {
+
+    this.categorias.update(lista => [
+      ...lista,
+      categoria
+    ]);
+  }
+
+  actualizarCategoria(categoria: Categoria) {
+
+    this.categorias.update(lista =>
+      lista.map(c =>
+        c.id === categoria.id
+          ? categoria
+          : c
+      )
+    );
+  }
+
+  eliminarCategoria(id: number) {
+
+    this.categorias.update(lista =>
+      lista.filter(c => c.id !== id)
+    );
   }
 
   obtenerSubcategorias(): Subcategoria[] {
-    return SUBCATEGORIAS;
+    return this.subcategorias();
   }
 
   obtenerProductos(): Producto[] {
-    return PRODUCTOS;
+    return this.productos();
   }
 
   obtenerProductoPorId(id: number): Producto | undefined {

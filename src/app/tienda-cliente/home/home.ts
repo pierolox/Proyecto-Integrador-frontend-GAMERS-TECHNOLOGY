@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Categoria, Subcategoria, Producto } from '../models/tienda.models';
+import { Categoria, Subcategoria, Producto } from '../../shared/models/inventario.models';
 import { InventarioService } from '../services/inventario.service';
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 
@@ -32,13 +32,16 @@ export class Home implements OnInit, OnDestroy {
   subcategorias: Subcategoria[] = [];
   productos: Producto[] = [];
 
+  indiceCategorias = signal(0);
+  categoriasVisibles = signal(4);
+
   productosNuevos: Producto[] = [];
   indiceProductos = signal(0);
   productosVisibles = signal(4);
 
   constructor(
     private router: Router,
-    private inventario: InventarioService
+    public inventario: InventarioService
   ) { }
 
   obtenerCantidadProductos(categoriaId: number): number {

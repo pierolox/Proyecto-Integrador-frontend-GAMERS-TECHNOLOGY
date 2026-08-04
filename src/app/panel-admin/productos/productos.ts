@@ -1,6 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CATEGORIAS_MOCK, SUBCATEGORIAS_MOCK, Estado } from '../data/mock-data';
+import { Producto } from '../../shared/models/inventario.models';
 
 interface Producto {
   id: number;
@@ -11,7 +11,6 @@ interface Producto {
   categoriaId: number;
   subcategoriaId: number;
   imagen: string;
-  estado: Estado;
 }
 
 type ProductoForm = Omit<Producto, 'id'>;

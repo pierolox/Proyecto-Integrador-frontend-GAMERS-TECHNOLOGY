@@ -79,7 +79,7 @@
           </div>
           <h3>{{ p.nombre }}</h3>
           <p class="categoria-chip">
-            {{ obtenerNombreSubcategoria(p.subcategoriaId) }}
+            {{ inventario.obtenerNombreSubcategoria(p.subcategoriaId) }}
           </p>
           <p class="precio">S/ {{ p.precio.toFixed(2) }}</p>
           <button class="btn-agregar">Agregar al carrito</button>

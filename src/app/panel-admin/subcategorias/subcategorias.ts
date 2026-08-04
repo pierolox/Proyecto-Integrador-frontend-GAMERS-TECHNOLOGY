@@ -1,6 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CATEGORIAS_MOCK, SUBCATEGORIAS_MOCK, Subcategoria } from '../data/mock-data';
+import { CATEGORIAS_MOCK, SUBCATEGORIAS_MOCK, Subcategoria } from '../../shared/models/inventario.models';
 
 type SubcategoriaForm = Omit<Subcategoria, 'id'>;
 

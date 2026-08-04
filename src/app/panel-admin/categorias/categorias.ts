@@ -1,6 +1,7 @@
 import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CATEGORIAS_MOCK, SUBCATEGORIAS_MOCK, Categoria } from '../data/mock-data';
+import { Categoria, Subcategoria } from '../../shared/models/inventario.models';
+import { InventarioService } from '../../tienda-cliente/services/inventario.service';
 
 type CategoriaForm = Omit<Categoria, 'id'>;
 
@@ -17,10 +18,22 @@ const FORM_VACIO: CategoriaForm = {
   templateUrl: './categorias.html',
   styleUrl: './categorias.css',
 })
-export class Categorias {
-  categorias = signal<Categoria[]>([...CATEGORIAS_MOCK]);
-  private subcategorias = SUBCATEGORIAS_MOCK;
 
+export class Categorias {
+
+  constructor(
+    private inventario: InventarioService
+  ) {
+    this.categorias.set(
+      this.inventario.obtenerCategorias()
+    );
+
+    this.subcategorias =
+      this.inventario.obtenerSubcategorias();
+  }
+
+  categorias = signal<Categoria[]>([]);
+  private subcategorias: Subcategoria[] = [];
   private siguienteId = 5;
 
   busqueda = signal('');

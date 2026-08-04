@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InventarioService } from '../services/inventario.service';
-import { Categoria, Subcategoria, Producto } from '../models/tienda.models';
+import { Categoria, Subcategoria, Producto } from '../../shared/models/inventario.models';
 
 @Component({
   selector: 'app-productos',
