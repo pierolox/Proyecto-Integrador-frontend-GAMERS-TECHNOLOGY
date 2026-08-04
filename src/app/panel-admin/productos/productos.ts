@@ -1,17 +1,8 @@
 import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Producto } from '../../shared/models/inventario.models';
+import { Producto, Categoria, Subcategoria } from '../../shared/models/inventario.models';
 
-interface Producto {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  precio: number;
-  stock: number;
-  categoriaId: number;
-  subcategoriaId: number;
-  imagen: string;
-}
+
 
 type ProductoForm = Omit<Producto, 'id'>;
 

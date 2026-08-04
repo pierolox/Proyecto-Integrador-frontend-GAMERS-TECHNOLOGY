@@ -1,32 +1,45 @@
-export type Estado = 'Activo' | 'Inactivo';
-
 export interface Categoria {
   id: number;
   nombre: string;
   descripcion: string;
-  estado: Estado;
+  icono: string;
+  colorInicio: string;
+  colorFin: string;
 }
+
 
 export interface Subcategoria {
   id: number;
   categoriaId: number;
   nombre: string;
   descripcion: string;
-  estado: Estado;
 }
+
 
 export interface Producto {
   id: number;
+
+  categoriaId: number;
+  subcategoriaId: number;
 
   nombre: string;
   descripcion: string;
 
   precio: number;
+  precioAnterior?: number;
+
   stock: number;
 
-  categoriaId: number;
-  subcategoriaId: number;
-
   imagen: string;
-  estado: Estado;
+
+  estado: 'Activo' | 'Inactivo';
+
+  icono: string;
+
+  colorInicio: string;
+  colorFin: string;
+
+  esNuevo?: boolean;
+  descuento?: number;
+  rating: number;
 }

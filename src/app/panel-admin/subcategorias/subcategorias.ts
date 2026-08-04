@@ -1,30 +1,36 @@
-import { Component, computed, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { CATEGORIAS_MOCK, SUBCATEGORIAS_MOCK, Subcategoria } from '../../shared/models/inventario.models';
+import { Component, computed, signal } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { Subcategoria, Categoria } from "../../shared/models/inventario.models";
+import { InventarioService } from "../../tienda-cliente/services/inventario.service";
 
-type SubcategoriaForm = Omit<Subcategoria, 'id'>;
+type SubcategoriaForm = Omit<Subcategoria, "id">;
 
 const FORM_VACIO: SubcategoriaForm = {
   categoriaId: 0,
-  nombre: '',
-  descripcion: '',
-  estado: 'Activo',
+  nombre: "",
+  descripcion: "",
 };
 
 @Component({
-  selector: 'app-subcategorias',
+  selector: "app-subcategorias",
   standalone: true,
   imports: [FormsModule],
-  templateUrl: './subcategorias.html',
-  styleUrl: './subcategorias.css',
+  templateUrl: "./subcategorias.html",
+  styleUrl: "./subcategorias.css",
 })
 export class Subcategorias {
-  categorias = CATEGORIAS_MOCK;
-  subcategorias = signal<Subcategoria[]>([...SUBCATEGORIAS_MOCK]);
+  categorias!: Categoria[];
+
+  subcategorias!: ReturnType<InventarioService["subcategoriasSignal"]>;
+
+  constructor(private inventario: InventarioService) {
+    this.subcategorias = this.inventario.subcategoriasSignal();
+    this.categorias = this.inventario.obtenerCategorias();
+  }
 
   private siguienteId = 12;
 
-  busqueda = signal('');
+  busqueda = signal("");
   filtroCategoriaId = signal<number>(0);
 
   subcategoriasFiltradas = computed(() => {
@@ -32,14 +38,15 @@ export class Subcategorias {
     const catId = this.filtroCategoriaId();
 
     return this.subcategorias().filter((s) => {
-      const coincideTermino = !termino || s.nombre.toLowerCase().includes(termino);
+      const coincideTermino =
+        !termino || s.nombre.toLowerCase().includes(termino);
       const coincideCategoria = !catId || s.categoriaId === catId;
       return coincideTermino && coincideCategoria;
     });
   });
 
   nombreCategoria(categoriaId: number): string {
-    return this.categorias.find((c) => c.id === categoriaId)?.nombre ?? '—';
+    return this.categorias.find((c) => c.id === categoriaId)?.nombre ?? "—";
   }
 
   // -------- modal crear/editar --------
@@ -73,7 +80,7 @@ export class Subcategorias {
     if (this.modoEdicion() && this.subcategoriaEditandoId() !== null) {
       const id = this.subcategoriaEditandoId()!;
       this.subcategorias.update((lista) =>
-        lista.map((s) => (s.id === id ? { id, ...this.form } : s))
+        lista.map((s) => (s.id === id ? { id, ...this.form } : s)),
       );
     } else {
       const nueva: Subcategoria = { id: this.siguienteId++, ...this.form };
@@ -96,8 +103,11 @@ export class Subcategorias {
 
   confirmarEliminar() {
     const objetivo = this.subcategoriaAEliminar();
+
     if (!objetivo) return;
-    this.subcategorias.update((lista) => lista.filter((s) => s.id !== objetivo.id));
+
+    this.inventario.eliminarSubcategoria(objetivo.id);
+
     this.subcategoriaAEliminar.set(null);
   }
 }
