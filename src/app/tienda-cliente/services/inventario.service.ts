@@ -75,19 +75,22 @@ export class InventarioService {
   }
 
   obtenerSubcategoriasPorCategoria(categoriaId: number): Subcategoria[] {
-    return SUBCATEGORIAS.filter((s) => s.categoriaId === categoriaId);
+    return this.subcategorias().filter((s) => s.categoriaId === categoriaId);
   }
 
   obtenerProductosPorSubcategoria(subcategoriaId: number): Producto[] {
-    return PRODUCTOS.filter((p) => p.subcategoriaId === subcategoriaId);
+    return this.productos().filter((p) => p.subcategoriaId === subcategoriaId);
   }
 
   obtenerCantidadProductosCategoria(categoriaId: number): number {
-    const subIds = SUBCATEGORIAS.filter(
-      (s) => s.categoriaId === categoriaId,
-    ).map((s) => s.id);
 
-    return PRODUCTOS.filter((p) => subIds.includes(p.subcategoriaId)).length;
+    const subIds = this.subcategorias()
+      .filter((s) => s.categoriaId === categoriaId)
+      .map((s) => s.id);
+
+    return this.productos()
+      .filter((p) => subIds.includes(p.subcategoriaId))
+      .length;
   }
 
   obtenerProductosPorCategoria(categoriaId: number) {
@@ -99,9 +102,10 @@ export class InventarioService {
   }
 
   obtenerNombreSubcategoria(subcategoriaId: number): string {
-    const sub = SUBCATEGORIAS.find((s) => s.id === subcategoriaId);
+    const sub = this.subcategorias()
+      .find((s) => s.id === subcategoriaId);
 
-    return sub ? sub.nombre : "";
+    return sub?.nombre ?? "";
   }
 
   // =========================
@@ -131,7 +135,7 @@ export class InventarioService {
     soloNuevos: boolean,
     orden: "relevancia" | "precio-asc" | "precio-desc",
   ): Producto[] {
-    let lista = [...PRODUCTOS];
+    let lista = [...this.productos()];
 
     // Filtrar nuevos
 
@@ -163,10 +167,12 @@ export class InventarioService {
   }
 
   obtenerCantidadProductosPorCategoria(categoriaId: number): number {
-    const subIds = SUBCATEGORIAS.filter(
-      (s) => s.categoriaId === categoriaId,
-    ).map((s) => s.id);
+    const subIds = this.subcategorias()
+      .filter((s) => s.categoriaId === categoriaId)
+      .map((s) => s.id);
 
-    return PRODUCTOS.filter((p) => subIds.includes(p.subcategoriaId)).length;
+    return this.productos()
+      .filter((p) => subIds.includes(p.subcategoriaId))
+      .length;
   }
 }
