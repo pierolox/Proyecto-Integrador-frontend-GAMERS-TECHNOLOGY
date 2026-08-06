@@ -26,13 +26,11 @@ export class Categorias {
   constructor(private inventario: InventarioService) {
     this.categorias = this.inventario.categoriasSignal();
     this.subcategorias = this.inventario.subcategoriasSignal();
-    this.siguienteId = Math.max(...this.categorias().map((c) => c.id), 0) + 1;
   }
 
   categorias!: ReturnType<InventarioService["categoriasSignal"]>;
   subcategorias!: ReturnType<InventarioService["subcategoriasSignal"]>;
   busqueda = signal("");
-  private siguienteId = 1;
 
   categoriasFiltradas = computed(() => {
     const texto = this.busqueda().toLowerCase().trim();
@@ -50,12 +48,14 @@ export class Categorias {
   form: CategoriaForm = { ...FORM_VACIO };
 
   abrirNuevo() {
+    this.modoEdicion.set(false);
     this.categoriaEditandoId.set(null);
     this.form = { ...FORM_VACIO };
     this.modalAbierto.set(true);
   }
 
   abrirEditar(categoria: Categoria) {
+    this.modoEdicion.set(true);
     this.categoriaEditandoId.set(categoria.id);
 
     const { id, ...resto } = categoria;
@@ -80,7 +80,6 @@ export class Categorias {
       });
     } else {
       this.inventario.agregarCategoria({
-        id: this.siguienteId++,
         ...this.form,
       });
     }

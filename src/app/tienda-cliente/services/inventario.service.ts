@@ -1,18 +1,68 @@
 import { Injectable, signal } from "@angular/core";
-import { CATEGORIAS, SUBCATEGORIAS, PRODUCTOS } from "../data/mock-data";
+import { HttpClient } from "@angular/common/http";
+import { SUBCATEGORIAS, PRODUCTOS } from "../data/mock-data";
 import {
   Categoria,
   Subcategoria,
   Producto,
 } from "../../shared/models/inventario.models";
+import { environment } from "../../../environments/environment";
+
+// Forma en la que el backend serializa Categoria (id_categoria -> idCategoria)
+interface CategoriaApi {
+  idCategoria: number;
+  nombre: string;
+  descripcion: string;
+  icono: string | null;
+  colorInicio: string | null;
+  colorFin: string | null;
+}
+
+function categoriaApiAFrontend(c: CategoriaApi): Categoria {
+  return {
+    id: c.idCategoria,
+    nombre: c.nombre,
+    descripcion: c.descripcion ?? "",
+    icono: c.icono ?? "",
+    colorInicio: c.colorInicio ?? "#6366f1",
+    colorFin: c.colorFin ?? "#4338ca",
+  };
+}
+
+function categoriaFrontendABackend(c: Omit<Categoria, "id"> | Categoria) {
+  return {
+    nombre: c.nombre,
+    descripcion: c.descripcion,
+    icono: c.icono,
+    colorInicio: c.colorInicio,
+    colorFin: c.colorFin,
+  };
+}
 
 @Injectable({
   providedIn: "root",
 })
 export class InventarioService {
-  private categorias = signal<Categoria[]>([...CATEGORIAS]);
+  private apiUrl = `${environment.apiUrl}/categorias`;
+
+  private categorias = signal<Categoria[]>([]);
   private subcategorias = signal<Subcategoria[]>([...SUBCATEGORIAS]);
   private productos = signal<Producto[]>([...PRODUCTOS]);
+
+  constructor(private http: HttpClient) {
+    this.cargarCategorias();
+  }
+
+  private cargarCategorias() {
+    this.http.get<CategoriaApi[]>(this.apiUrl).subscribe({
+      next: (lista) => this.categorias.set(lista.map(categoriaApiAFrontend)),
+      error: (err) => console.error("No se pudieron cargar las categorías", err),
+    });
+  }
+
+  subcategoriasSignal() {
+    return this.subcategorias;
+  }
 
   agregarSubcategoria(subcategoria: Subcategoria) {
     this.subcategorias.update((lista) => [...lista, subcategoria]);
@@ -28,10 +78,6 @@ export class InventarioService {
     this.subcategorias.update((lista) => lista.filter((s) => s.id !== id));
   }
 
-  subcategoriasSignal() {
-    return this.subcategorias;
-  }
-
   obtenerCategorias(): Categoria[] {
     return this.categorias();
   }
@@ -40,18 +86,33 @@ export class InventarioService {
     return this.categorias;
   }
 
-  agregarCategoria(categoria: Categoria) {
-    this.categorias.update((lista) => [...lista, categoria]);
+  agregarCategoria(categoria: Omit<Categoria, "id">) {
+    this.http
+      .post<CategoriaApi>(this.apiUrl, categoriaFrontendABackend(categoria))
+      .subscribe({
+        next: (creada) =>
+          this.categorias.update((lista) => [...lista, categoriaApiAFrontend(creada)]),
+        error: (err) => console.error("No se pudo crear la categoría", err),
+      });
   }
 
   actualizarCategoria(categoria: Categoria) {
-    this.categorias.update((lista) =>
-      lista.map((c) => (c.id === categoria.id ? categoria : c)),
-    );
+    this.http
+      .put<CategoriaApi>(`${this.apiUrl}/${categoria.id}`, categoriaFrontendABackend(categoria))
+      .subscribe({
+        next: (actualizada) =>
+          this.categorias.update((lista) =>
+            lista.map((c) => (c.id === categoria.id ? categoriaApiAFrontend(actualizada) : c)),
+          ),
+        error: (err) => console.error("No se pudo actualizar la categoría", err),
+      });
   }
 
   eliminarCategoria(id: number) {
-    this.categorias.update((lista) => lista.filter((c) => c.id !== id));
+    this.http.delete<boolean>(`${this.apiUrl}/${id}`).subscribe({
+      next: () => this.categorias.update((lista) => lista.filter((c) => c.id !== id)),
+      error: (err) => console.error("No se pudo eliminar la categoría", err),
+    });
   }
 
   obtenerSubcategorias(): Subcategoria[] {
