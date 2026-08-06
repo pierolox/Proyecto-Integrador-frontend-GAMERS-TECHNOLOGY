@@ -25,11 +25,11 @@ export class Categorias {
 
   constructor(private inventario: InventarioService) {
     this.categorias = this.inventario.categoriasSignal();
-    this.subcategorias = this.inventario.obtenerSubcategorias();
+    this.subcategorias = this.inventario.subcategoriasSignal();
   }
 
   categorias!: ReturnType<InventarioService["categoriasSignal"]>;
-  subcategorias: Subcategoria[] = [];
+  subcategorias!: ReturnType<InventarioService["subcategoriasSignal"]>;
   busqueda = signal("");
 
   categoriasFiltradas = computed(() => {
@@ -42,7 +42,8 @@ export class Categorias {
     );
   });
 
-  private siguienteId = 6;
+  private siguienteId =
+    Math.max(...this.categorias().map(c => c.id), 0) + 1;
 
   modoEdicion = signal(false);
   modalAbierto = signal(false);
@@ -92,8 +93,9 @@ export class Categorias {
     this.inventario.eliminarCategoria(id);
   }
 
-  contarSubcategorias(categoriaId: number): number {
-    return this.subcategorias.filter((s) => s.categoriaId === categoriaId)
+  contarSubcategorias(categoriaId: number) {
+    return this.subcategorias()
+      .filter(s => s.categoriaId === categoriaId)
       .length;
   }
 }

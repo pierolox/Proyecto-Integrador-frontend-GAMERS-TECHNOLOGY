@@ -28,7 +28,8 @@ export class Subcategorias {
     this.categorias = this.inventario.obtenerCategorias();
   }
 
-  private siguienteId = 12;
+  private siguienteId =
+    Math.max(...this.subcategorias().map(s => s.id), 0) + 1;
 
   busqueda = signal("");
   filtroCategoriaId = signal<number>(0);

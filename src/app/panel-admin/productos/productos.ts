@@ -31,15 +31,12 @@ export class Productos {
 
   private inventario = inject(InventarioService);
 
-  categorias =
-    this.inventario.obtenerCategorias();
-
-  subcategorias =
-    this.inventario.obtenerSubcategorias();
-
+  categorias = this.inventario.categoriasSignal();
+  subcategorias = this.inventario.subcategoriasSignal();
   productos = this.inventario.productosSignal();
 
-  private siguienteId = 7;
+  private siguienteId =
+    Math.max(...this.productos().map(p => p.id), 0) + 1;
 
   // -------- búsqueda --------
   busqueda = signal('');
@@ -57,13 +54,27 @@ export class Productos {
   form: ProductoForm = { ...FORM_VACIO };
 
   subcategoriasDisponibles = computed(() => {
-    return this.subcategorias.filter((s: Subcategoria) => s.categoriaId === Number(this.form.categoriaId));
+    return this.subcategorias().filter(
+      (s: Subcategoria) =>
+        s.categoriaId === Number(this.form.categoriaId)
+    );
   });
 
   onCategoriaChange() {
-    // al cambiar la categoría, se limpia la subcategoría si ya no pertenece
-    const pertenece = this.subcategorias.some((s: Subcategoria) => s.categoriaId === Number(this.form.categoriaId) && s.id === Number(this.form.subcategoriaId)
+
+    console.log("Categoria elegida:", this.form.categoriaId);
+
+    console.log(
+      this.subcategorias()
+        .filter(s => s.categoriaId === Number(this.form.categoriaId))
     );
+
+    const pertenece = this.subcategorias().some(
+      s =>
+        s.categoriaId === Number(this.form.categoriaId) &&
+        s.id === Number(this.form.subcategoriaId)
+    );
+
     if (!pertenece) {
       this.form.subcategoriaId = 0;
     }
@@ -129,11 +140,15 @@ export class Productos {
 
   // -------- utilidades para la vista --------
   nombreCategoria(id: number): string {
-    return this.categorias.find((c: Categoria) => c.id === id)?.nombre ?? '—';
+    return this.categorias().find(
+      (c: Categoria) => c.id === id
+    )?.nombre ?? "—";
   }
 
   nombreSubcategoria(id: number): string {
-    return this.subcategorias.find((s: Subcategoria) => s.id === id)?.nombre ?? '—';
+    return this.subcategorias().find(
+      (s: Subcategoria) => s.id === id
+    )?.nombre ?? "—";
   }
 
   iniciales(nombre: string): string {
