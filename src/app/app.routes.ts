@@ -5,6 +5,7 @@ import { Login } from './login/login';
 
 // Panel del administrador
 import { PanelAdmin } from './panel-admin/panel-admin';
+import { adminGuard } from './admin.guard';
 
 // Tienda del cliente (storefront)
 import { TiendaCliente } from './tienda-cliente/tienda-cliente';
@@ -20,8 +21,8 @@ export const routes: Routes = [
   // Acceso del administrador
   { path: 'login', component: Login },
 
-  // Panel del administrador
-  { path: 'panel-admin', component: PanelAdmin },
+  // Panel del administrador (protegido: requiere sesión con rol ADMIN)
+  { path: 'panel-admin', component: PanelAdmin, canActivate: [adminGuard] },
 
   // Tienda del cliente (todo lo que no sea /login ni /panel-admin)
   {

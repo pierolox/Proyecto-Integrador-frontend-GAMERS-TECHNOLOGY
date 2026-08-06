@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
 import { Dashboard } from './dashboard/dashboard';
 import { Productos } from './productos/productos';
 import { Categorias } from './categorias/categorias';
@@ -40,13 +41,17 @@ export class PanelAdmin {
     { label: 'Clientes nuevos', value: '57', trend: '+8.9%', positive: true },
   ];
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+  ) {}
 
   seleccionarSeccion(id: Seccion) {
     this.seccionActiva.set(id);
   }
 
   cerrarSesion() {
-    this.router.navigate(['/']);
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

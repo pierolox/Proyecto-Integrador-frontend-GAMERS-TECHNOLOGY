@@ -1,60 +1,80 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
+import { environment } from '../environments/environment';
 
-export type UserRole = 'admin' | 'cliente';
+export type UserRole = 'ADMIN' | 'USUARIO';
 
-export interface AuthUser {
-  usuario: string;
-  correo?: string;
-  rol: UserRole;
-  contrasena: string;
+export interface LoginResponse {
+  success: boolean;
+  mensaje: string;
+  token?: string;
+  usuario?: string;
+  rol?: UserRole;
 }
+
+interface SesionGuardada {
+  token: string;
+  usuario: string;
+  rol: UserRole;
+}
+
+const STORAGE_KEY = 'gt_session';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private users: AuthUser[] = [
-    { usuario: 'admin', contrasena: '123456', rol: 'admin' },
-  ];
+  private apiUrl = `${environment.apiUrl}/auth`;
 
-  login(usuario: string, contrasena: string): AuthUser | null {
-    const normalizedUser = usuario.trim().toLowerCase();
-    const normalizedPassword = contrasena.trim();
+  // Estado de sesión reactivo, disponible en toda la app (guards, header, etc.)
+  private sesion = signal<SesionGuardada | null>(this.leerSesionGuardada());
 
-    const storedUser = this.users.find((user) => user.usuario.toLowerCase() === normalizedUser);
+  isAuthenticated = computed(() => this.sesion() !== null);
+  usuarioActual = computed(() => this.sesion()?.usuario ?? null);
+  rolActual = computed(() => this.sesion()?.rol ?? null);
+  esAdmin = computed(() => this.sesion()?.rol === 'ADMIN');
 
-    if (!storedUser) {
-      return null;
-    }
+  constructor(private http: HttpClient) {}
 
-    if (storedUser.contrasena !== normalizedPassword) {
-      return null;
-    }
-
-    return { ...storedUser };
+  login(usuario: string, contrasena: string): Observable<LoginResponse> {
+    return this.http
+      .post<LoginResponse>(`${this.apiUrl}/login`, { usuario, contrasena })
+      .pipe(tap((res) => this.manejarRespuestaAuth(res)));
   }
 
-  register(usuario: string, correo: string, contrasena: string): string | null {
-    const normalizedUser = usuario.trim().toLowerCase();
+  register(usuario: string, correo: string, contrasena: string): Observable<LoginResponse> {
+    return this.http
+      .post<LoginResponse>(`${this.apiUrl}/register`, { usuario, correo, contrasena })
+      .pipe(tap((res) => this.manejarRespuestaAuth(res)));
+  }
 
-    if (!normalizedUser || !correo.trim() || !contrasena.trim()) {
-      return 'Completa todos los campos para crear tu cuenta.';
+  logout(): void {
+    localStorage.removeItem(STORAGE_KEY);
+    this.sesion.set(null);
+  }
+
+  getToken(): string | null {
+    return this.sesion()?.token ?? null;
+  }
+
+  private manejarRespuestaAuth(res: LoginResponse): void {
+    if (res.success && res.token && res.usuario && res.rol) {
+      const sesion: SesionGuardada = {
+        token: res.token,
+        usuario: res.usuario,
+        rol: res.rol,
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(sesion));
+      this.sesion.set(sesion);
     }
+  }
 
-    if (contrasena.trim().length < 4) {
-      return 'La contraseña debe tener al menos 4 caracteres.';
+  private leerSesionGuardada(): SesionGuardada | null {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    try {
+      return JSON.parse(raw) as SesionGuardada;
+    } catch {
+      return null;
     }
-
-    const exists = this.users.some((user) => user.usuario.toLowerCase() === normalizedUser);
-    if (exists) {
-      return 'El usuario ya existe.';
-    }
-
-    this.users.push({
-      usuario: normalizedUser,
-      correo: correo.trim(),
-      contrasena: contrasena.trim(),
-      rol: 'cliente',
-    });
-
-    return null;
   }
 }

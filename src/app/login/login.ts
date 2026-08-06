@@ -41,22 +41,27 @@ export class Login {
     this.errorMessage.set('');
     this.isSubmitting.set(true);
 
-    setTimeout(() => {
-      const user = this.authService.login(this.loginData.usuario, this.loginData.contrasena);
-      this.isSubmitting.set(false);
+    this.authService.login(this.loginData.usuario, this.loginData.contrasena).subscribe({
+      next: (res) => {
+        this.isSubmitting.set(false);
 
-      if (!user) {
-        this.errorMessage.set('Credenciales inválidas. Prueba con admin / 123456 o crea una cuenta de cliente.');
-        return;
-      }
+        if (!res.success) {
+          this.errorMessage.set(res.mensaje);
+          return;
+        }
 
-      if (user.rol === 'admin') {
-        this.router.navigate(['/panel-admin']);
-        return;
-      }
+        if (res.rol === 'ADMIN') {
+          this.router.navigate(['/panel-admin']);
+          return;
+        }
 
-      this.router.navigate(['/']);
-    }, 400);
+        this.router.navigate(['/']);
+      },
+      error: () => {
+        this.isSubmitting.set(false);
+        this.errorMessage.set('No se pudo conectar con el servidor. Intenta nuevamente.');
+      },
+    });
   }
 
   crearCuenta(form: NgForm) {
@@ -73,25 +78,27 @@ export class Login {
     this.errorMessage.set('');
     this.isSubmitting.set(true);
 
-    setTimeout(() => {
-      const error = this.authService.register(
-        this.registerData.usuario,
-        this.registerData.correo,
-        this.registerData.contrasena,
-      );
+    this.authService
+      .register(this.registerData.usuario, this.registerData.correo, this.registerData.contrasena)
+      .subscribe({
+        next: (res) => {
+          this.isSubmitting.set(false);
 
-      this.isSubmitting.set(false);
+          if (!res.success) {
+            this.errorMessage.set(res.mensaje);
+            return;
+          }
 
-      if (error) {
-        this.errorMessage.set(error);
-        return;
-      }
-
-      this.errorMessage.set('Cuenta creada. Ahora puedes iniciar sesión con tus credenciales.');
-      this.isRegistering.set(false);
-      this.loginData.usuario = this.registerData.usuario;
-      this.loginData.contrasena = this.registerData.contrasena;
-    }, 400);
+          this.errorMessage.set('Cuenta creada. Ahora puedes iniciar sesión con tus credenciales.');
+          this.isRegistering.set(false);
+          this.loginData.usuario = this.registerData.usuario;
+          this.loginData.contrasena = this.registerData.contrasena;
+        },
+        error: () => {
+          this.isSubmitting.set(false);
+          this.errorMessage.set('No se pudo conectar con el servidor. Intenta nuevamente.');
+        },
+      });
   }
 
   showRegister() {
