@@ -1,12 +1,5 @@
-import { Component } from '@angular/core';
-
-interface ProductoCarrito {
-  id: number;
-  nombre: string;
-  detalle: string;
-  precio: number;
-  cantidad: number;
-}
+import { Component, signal } from '@angular/core';
+import { CarritoService } from '../services/carrito.service';
 
 @Component({
   selector: 'app-carrito',
@@ -16,29 +9,33 @@ interface ProductoCarrito {
   styleUrl: './carrito.css',
 })
 export class Carrito {
-  productos: ProductoCarrito[] = [
-    { id: 1, nombre: 'Teclado mecánico RGB', detalle: '1 unidad · S/ 320.00', precio: 320, cantidad: 1 },
-    { id: 2, nombre: 'Mouse gamer inalámbrico', detalle: '2 unidades · S/ 180.00', precio: 180, cantidad: 2 },
-  ];
-
-  showPago = false;
+  readonly showPago = signal(false);
   metodoSeleccionado: 'tarjeta' | 'yape' | 'contraentrega' | null = null;
 
+  constructor(public carrito: CarritoService) {}
+
+  get productos() {
+    return this.carrito.itemsSignal()();
+  }
+
   get total(): number {
-    return this.productos.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
+    return this.productos.reduce(
+      (sum, item) => sum + item.producto.precio * item.cantidad,
+      0,
+    );
   }
 
   quitarProducto(productoId: number) {
-    this.productos = this.productos.filter((producto) => producto.id !== productoId);
+    this.carrito.quitarProducto(productoId);
   }
 
   abrirMetodoPago() {
     this.metodoSeleccionado = null;
-    this.showPago = true;
+    this.showPago.set(true);
   }
 
   cerrarMetodoPago() {
-    this.showPago = false;
+    this.showPago.set(false);
   }
 
   seleccionarMetodo(metodo: 'tarjeta' | 'yape' | 'contraentrega') {
@@ -46,11 +43,9 @@ export class Carrito {
   }
 
   confirmarCompra() {
-    // Implementación mínima: vaciar carrito y cerrar modal
-    // En una app real, aquí iría la llamada al backend / pasarela de pago
     const total = this.total;
-    this.productos = [];
-    this.showPago = false;
+    this.carrito.vaciarCarrito();
+    this.showPago.set(false);
     window.alert('Pago procesado: ' + (this.metodoSeleccionado ?? 'método seleccionado') + '\nTotal: S/ ' + total.toFixed(2));
   }
 }

@@ -26,11 +26,13 @@ export class Categorias {
   constructor(private inventario: InventarioService) {
     this.categorias = this.inventario.categoriasSignal();
     this.subcategorias = this.inventario.subcategoriasSignal();
+    this.siguienteId = Math.max(...this.categorias().map((c) => c.id), 0) + 1;
   }
 
   categorias!: ReturnType<InventarioService["categoriasSignal"]>;
   subcategorias!: ReturnType<InventarioService["subcategoriasSignal"]>;
   busqueda = signal("");
+  private siguienteId = 1;
 
   categoriasFiltradas = computed(() => {
     const texto = this.busqueda().toLowerCase().trim();
@@ -41,9 +43,6 @@ export class Categorias {
       c.nombre.toLowerCase().includes(texto),
     );
   });
-
-  private siguienteId =
-    Math.max(...this.categorias().map(c => c.id), 0) + 1;
 
   modoEdicion = signal(false);
   modalAbierto = signal(false);

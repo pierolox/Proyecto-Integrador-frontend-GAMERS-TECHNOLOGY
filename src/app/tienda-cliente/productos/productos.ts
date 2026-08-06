@@ -1,6 +1,7 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, Inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InventarioService } from '../services/inventario.service';
+import { CarritoService } from '../services/carrito.service';
 import { Categoria, Subcategoria, Producto } from '../../shared/models/inventario.models';
 
 @Component({
@@ -39,7 +40,8 @@ export class Productos implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private inventario: InventarioService
+    private inventario: InventarioService,
+    private carrito: CarritoService
   ) { }
 
   ngOnInit() {
@@ -102,6 +104,10 @@ export class Productos implements OnInit {
 
     return this.inventario
       .obtenerNombreSubcategoria(subcategoriaId);
+  }
+
+  agregarAlCarrito(producto: Producto) {
+    this.carrito.agregarProducto(producto);
   }
 
   // =====================================================

@@ -19,13 +19,18 @@
     </nav>
 
     <div class="acciones">
+      @if (isLoggedIn) {
+      <button class="btn-logout" (click)="logout()">Cerrar sesión</button>
+      } @else {
+      <a class="btn-login" routerLink="/login" (click)="cerrarMenu()">Iniciar sesión</a>
+      }
       <a class="btn-icono" routerLink="/busqueda" routerLinkActive="active" aria-label="Buscar"
         (click)="cerrarMenu()">🔍</a>
       <a class="btn-carrito" routerLink="/carrito" routerLinkActive="active" aria-label="Ir al carrito"
         (click)="cerrarMenu()">
         🛒
-        @if (cantidadCarrito() > 0) {
-        <span class="badge">{{ cantidadCarrito() }}</span>
+        @if (cantidadCarrito > 0) {
+        <span class="badge">{{ cantidadCarrito }}</span>
         }
       </a>
     </div>

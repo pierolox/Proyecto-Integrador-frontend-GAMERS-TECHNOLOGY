@@ -7,14 +7,12 @@ export interface Categoria {
   colorFin: string;
 }
 
-
 export interface Subcategoria {
   id: number;
   categoriaId: number;
   nombre: string;
   descripcion: string;
 }
-
 
 export interface Producto {
   id: number;

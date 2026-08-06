@@ -22,14 +22,13 @@ export class Subcategorias {
   categorias!: Categoria[];
 
   subcategorias!: ReturnType<InventarioService["subcategoriasSignal"]>;
+  private siguienteId = 1;
 
   constructor(private inventario: InventarioService) {
     this.subcategorias = this.inventario.subcategoriasSignal();
     this.categorias = this.inventario.obtenerCategorias();
+    this.siguienteId = Math.max(...this.subcategorias().map((s) => s.id), 0) + 1;
   }
-
-  private siguienteId =
-    Math.max(...this.subcategorias().map(s => s.id), 0) + 1;
 
   busqueda = signal("");
   filtroCategoriaId = signal<number>(0);

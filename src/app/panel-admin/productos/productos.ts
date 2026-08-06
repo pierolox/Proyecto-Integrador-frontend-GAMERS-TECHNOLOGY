@@ -53,25 +53,26 @@ export class Productos {
   productoEditandoId = signal<number | null>(null);
   form: ProductoForm = { ...FORM_VACIO };
 
-  subcategoriasDisponibles = computed(() => {
+  get subcategoriasDisponibles(): Subcategoria[] {
     return this.subcategorias().filter(
       (s: Subcategoria) =>
         s.categoriaId === Number(this.form.categoriaId)
     );
-  });
+  }
 
   onCategoriaChange() {
+    const categoriaId = Number(this.form.categoriaId);
 
-    console.log("Categoria elegida:", this.form.categoriaId);
+    console.log("Categoria elegida:", categoriaId);
 
     console.log(
       this.subcategorias()
-        .filter(s => s.categoriaId === Number(this.form.categoriaId))
+        .filter(s => s.categoriaId === categoriaId)
     );
 
     const pertenece = this.subcategorias().some(
       s =>
-        s.categoriaId === Number(this.form.categoriaId) &&
+        s.categoriaId === categoriaId &&
         s.id === Number(this.form.subcategoriaId)
     );
 

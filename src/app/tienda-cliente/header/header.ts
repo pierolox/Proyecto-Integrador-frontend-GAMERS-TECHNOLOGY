@@ -1,6 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { CarritoService } from '../services/carrito.service';
 
 @Component({
   selector: 'app-header',
@@ -11,10 +12,17 @@ import { CommonModule } from '@angular/common';
 })
 export class Header {
   menuAbierto = signal(false);
-  cantidadCarrito = signal(3);
   userName = signal<string | null>(null);
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private carrito: CarritoService) {}
+
+  get cantidadCarrito(): number {
+    return this.carrito.cantidadProductos();
+  }
+
+  get isLoggedIn(): boolean {
+    return this.userName() !== null;
+  }
 
   ngOnInit() {
     this.loadUser();
@@ -26,7 +34,7 @@ export class Header {
       const raw = localStorage.getItem('usuario');
       if (raw) {
         const u = JSON.parse(raw);
-        this.userName.set(u.nombre ?? null);
+        this.userName.set(u.nombre ?? u.usuario ?? null);
       } else {
         this.userName.set(null);
       }

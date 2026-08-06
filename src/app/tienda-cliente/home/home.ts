@@ -1,5 +1,6 @@
 import { Router } from '@angular/router';
 import { Categoria, Subcategoria, Producto } from '../../shared/models/inventario.models';
+import { CarritoService } from '../services/carrito.service';
 import { InventarioService } from '../services/inventario.service';
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 
@@ -7,6 +8,7 @@ interface Slide {
   titulo: string;
   subtitulo: string;
   boton: string;
+  link: string;
   colorInicio: string;
   colorFin: string;
   icono: string;
@@ -21,9 +23,9 @@ interface Slide {
 })
 export class Home implements OnInit, OnDestroy {
   slides: Slide[] = [
-    { titulo: 'Sube de nivel tu setup', subtitulo: 'Hasta 30% de descuento en periféricos gamer', boton: 'Ver ofertas', colorInicio: '#312e81', colorFin: '#4338ca', icono: '🎮' },
-    { titulo: 'Nuevas tarjetas gráficas RTX', subtitulo: 'La potencia que tu PC necesita ya está aquí', boton: 'Ver tarjetas gráficas', colorInicio: '#0891b2', colorFin: '#164e63', icono: '🖥️' },
-    { titulo: 'Consolas de última generación', subtitulo: 'PS5 y Xbox Series X con stock disponible', boton: 'Ver consolas', colorInicio: '#7e22ce', colorFin: '#4c1d95', icono: '🕹️' },
+    { titulo: 'Sube de nivel tu setup', subtitulo: 'Hasta 30% de descuento en periféricos gamer', boton: 'Ver ofertas', link: '/ofertas', colorInicio: '#312e81', colorFin: '#4338ca', icono: '🎮' },
+    { titulo: 'Nuevas tarjetas gráficas RTX', subtitulo: 'La potencia que tu PC necesita ya está aquí', boton: 'Ver tarjetas gráficas', link: '/productos', colorInicio: '#0891b2', colorFin: '#164e63', icono: '🖥️' },
+    { titulo: 'Consolas de última generación', subtitulo: 'PS5 y Xbox Series X con stock disponible', boton: 'Ver consolas', link: '/productos', colorInicio: '#7e22ce', colorFin: '#4c1d95', icono: '🕹️' },
   ];
   slideActual = signal(0);
   private intervalId: any;
@@ -41,7 +43,8 @@ export class Home implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    public inventario: InventarioService
+    public inventario: InventarioService,
+    private carrito: CarritoService
   ) { }
 
   obtenerCantidadProductos(categoriaId: number): number {
@@ -98,6 +101,14 @@ export class Home implements OnInit, OnDestroy {
 
   anteriorSlide() {
     this.slideActual.update((v) => (v - 1 + this.slides.length) % this.slides.length);
+  }
+
+  irA(slide: Slide) {
+    this.router.navigate([slide.link]);
+  }
+
+  agregarAlCarrito(producto: Producto) {
+    this.carrito.agregarProducto(producto);
   }
 
   // ---- Carrusel de categorías ----

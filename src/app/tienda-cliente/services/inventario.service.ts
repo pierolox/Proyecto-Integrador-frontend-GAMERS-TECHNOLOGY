@@ -62,6 +62,19 @@ export class InventarioService {
     return this.productos();
   }
 
+  obtenerProductosPorTexto(texto: string): Producto[] {
+    const termino = texto.trim().toLowerCase();
+
+    if (!termino) {
+      return this.productos();
+    }
+
+    return this.productos().filter((producto) =>
+      producto.nombre.toLowerCase().includes(termino) ||
+      (producto.descripcion ?? "").toLowerCase().includes(termino),
+    );
+  }
+
   obtenerProductoPorId(id: number) {
     return this.productos().find((p) => p.id === id);
   }

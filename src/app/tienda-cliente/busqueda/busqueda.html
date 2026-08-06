@@ -4,8 +4,21 @@
     <h1>Búsqueda de productos</h1>
     <p class="descripcion">Encuentra accesorios, componentes y consolas disponibles en la tienda.</p>
 
+    <div class="busqueda-barra">
+      <div class="busqueda-shell">
+        <span class="busqueda-icon">🔎</span>
+        <input
+          type="text"
+          placeholder="Buscar producto, componente o accesorio..."
+          [ngModel]="busqueda()"
+          (ngModelChange)="busqueda.set($event)"
+        />
+      </div>
+      <p class="busqueda-hint">Encuentra productos por nombre o descripción en segundos.</p>
+    </div>
+
     <div class="grid-productos">
-      @for (producto of productos; track producto.id) {
+      @for (producto of productosFiltrados(); track producto.id) {
       <article class="card-producto">
         <div class="icono">{{ producto.icono }}</div>
         <h3>{{ producto.nombre }}</h3>

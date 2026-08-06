@@ -137,7 +137,7 @@
                     <label for="prodSubcategoria">Subcategoría</label>
                     <select id="prodSubcategoria" name="subcategoriaId" [(ngModel)]="form.subcategoriaId">
                         <option [ngValue]="0" disabled>Selecciona una subcategoría</option>
-                        @for (s of subcategoriasDisponibles(); track s.id) {
+                        @for (s of subcategoriasDisponibles; track s.id) {
                         <option [ngValue]="s.id">{{ s.nombre }}</option>
                         }
                     </select>

@@ -9,15 +9,15 @@
       <p>Tu carrito está vacío.</p>
     </div>
     } @else {
-    @for (producto of productos; track producto.id) {
+    @for (item of productos; track item.producto.id) {
     <div class="carrito-item">
       <div>
-        <h3>{{ producto.nombre }}</h3>
-        <p>{{ producto.detalle }}</p>
+        <h3>{{ item.producto.nombre }}</h3>
+        <p>{{ item.cantidad }} unidad(es) · S/ {{ (item.producto.precio * item.cantidad).toFixed(2) }}</p>
       </div>
       <div class="acciones-item">
-        <span class="precio">S/ {{ (producto.precio * producto.cantidad).toFixed(2) }}</span>
-        <button class="btn-quitar" (click)="quitarProducto(producto.id)">Quitar</button>
+        <span class="precio">S/ {{ (item.producto.precio * item.cantidad).toFixed(2) }}</span>
+        <button class="btn-quitar" (click)="quitarProducto(item.producto.id)">Quitar</button>
       </div>
     </div>
     }
@@ -32,7 +32,7 @@
   </div>
 </section>
 
-@if (showPago) {
+@if (showPago()) {
 <div class="modal-pago-overlay">
   <div class="modal-pago">
     <header>
