@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
+import { Toast } from './shared/notifications/toast';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, Toast],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { Dashboard } from './dashboard/dashboard';
@@ -7,6 +7,9 @@ import { Categorias } from './categorias/categorias';
 import { Subcategorias } from './subcategorias/subcategorias';
 import { Pedidos } from './pedidos/pedidos';
 import { Usuarios } from './usuarios/usuarios';
+import { PedidoService } from '../tienda-cliente/services/pedido.service';
+import { UsuarioService } from '../tienda-cliente/services/usuario.service';
+import { InventarioService } from '../tienda-cliente/services/inventario.service';
 
 type Seccion = 'dashboard' | 'productos' | 'categorias' | 'subcategorias' | 'pedidos' | 'usuarios';
 
@@ -36,17 +39,46 @@ export class PanelAdmin {
     { id: 'usuarios', label: 'Usuarios', icon: 'usuarios' },
   ];
 
-  stats: StatCard[] = [
-    { label: 'Ventas del mes', value: '$48,290', trend: '+12.4%', positive: true },
-    { label: 'Pedidos nuevos', value: '186', trend: '+5.1%', positive: true },
-    { label: 'Productos activos', value: '324', trend: '-1.2%', positive: false },
-    { label: 'Clientes nuevos', value: '57', trend: '+8.9%', positive: true },
-  ];
-
   constructor(
     private router: Router,
     private authService: AuthService,
-  ) {}
+    private pedidoService: PedidoService,
+    private usuarioService: UsuarioService,
+    private inventarioService: InventarioService,
+  ) {
+    // El header del dashboard necesita pedidos/usuarios reales, así que se
+    // piden apenas se entra al panel (InventarioService ya carga solo).
+    this.pedidoService.cargarTodos();
+    this.usuarioService.cargarTodos();
+  }
+
+  private esDelMesActual(fechaIso: string): boolean {
+    const fecha = new Date(fechaIso);
+    const ahora = new Date();
+    return fecha.getMonth() === ahora.getMonth() && fecha.getFullYear() === ahora.getFullYear();
+  }
+
+  // Tarjetas de resumen del dashboard, calculadas con datos reales del backend
+  // (antes eran valores fijos de ejemplo).
+  stats = computed<StatCard[]>(() => {
+    const pedidos = this.pedidoService.pedidosSignal()();
+    const usuarios = this.usuarioService.usuariosSignal()();
+    const productos = this.inventarioService.productosSignal()();
+
+    const pedidosDelMes = pedidos.filter((p) => this.esDelMesActual(p.fecha));
+    const ventasDelMes = pedidosDelMes.reduce((sum, p) => sum + p.total, 0);
+    const productosActivos = productos.filter((p) => p.estado === 'Activo').length;
+    const clientesNuevos = usuarios.filter(
+      (u) => u.rol === 'USUARIO' && this.esDelMesActual(u.fechaRegistro),
+    ).length;
+
+    return [
+      { label: 'Ventas del mes', value: `S/. ${ventasDelMes.toLocaleString('es-PE')}`, trend: 'este mes', positive: true },
+      { label: 'Pedidos nuevos', value: `${pedidosDelMes.length}`, trend: 'este mes', positive: true },
+      { label: 'Productos activos', value: `${productosActivos}`, trend: 'en catálogo', positive: true },
+      { label: 'Clientes nuevos', value: `${clientesNuevos}`, trend: 'este mes', positive: true },
+    ];
+  });
 
   seleccionarSeccion(id: Seccion) {
     this.seccionActiva.set(id);

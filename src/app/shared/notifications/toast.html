@@ -1,0 +1,8 @@
+<div class="toast-container">
+  @for (n of notificaciones(); track n.id) {
+  <div class="toast" [class.toast-error]="n.tipo === 'error'" [class.toast-info]="n.tipo === 'info'">
+    <span>{{ n.mensaje }}</span>
+    <button type="button" class="toast-close" (click)="cerrar(n.id)">&times;</button>
+  </div>
+  }
+</div>
