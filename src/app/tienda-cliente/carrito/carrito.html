@@ -43,6 +43,12 @@
     <div class="modal-body">
       <p>Selecciona un método de pago para completar tu compra.</p>
 
+      @if (errorPedido()) {
+      <div class="form-group full" style="background:#fee2e2; color:#991b1b; padding:10px 14px; border-radius:8px; margin-bottom:14px; font-size:14px;">
+        {{ errorPedido() }}
+      </div>
+      }
+
       <div class="metodos">
         <button class="metodo" [class.activo]="metodoSeleccionado === 'tarjeta'" (click)="seleccionarMetodo('tarjeta')">Tarjeta de crédito / débito</button>
         <button class="metodo" [class.activo]="metodoSeleccionado === 'yape'" (click)="seleccionarMetodo('yape')">Yape</button>
@@ -73,13 +79,52 @@
       @if (metodoSeleccionado === 'contraentrega') {
       <p>Paga en efectivo al momento de la entrega (Contraentrega).</p>
       }
+
+      @if (metodoSeleccionado) {
+      <form class="form-tarjeta" style="margin-top:16px;">
+        <label>
+          Correo de contacto
+          <input type="email" name="correo" [(ngModel)]="datosContacto.correo" placeholder="tucorreo@ejemplo.com" required />
+        </label>
+        <label>
+          Teléfono
+          <input type="tel" name="telefono" [(ngModel)]="datosContacto.telefono" placeholder="999 999 999" required />
+        </label>
+        <label>
+          Dirección de entrega
+          <input type="text" name="direccion" [(ngModel)]="datosContacto.direccion" placeholder="Av. Siempre Viva 123, Lima" required />
+        </label>
+      </form>
+      }
     </div>
 
     <footer>
       <div class="aceptados">Aceptamos: <strong>Visa</strong> · <strong>Mastercard</strong> · <strong>Yape</strong> · <strong>Plin</strong></div>
       <div style="flex:1"></div>
       <button class="btn-cancel" (click)="cerrarMetodoPago()">Cancelar</button>
-      <button class="btn-confirmar" [disabled]="!metodoSeleccionado" (click)="confirmarCompra()">Confirmar y pagar</button>
+      <button class="btn-confirmar" [disabled]="!metodoSeleccionado || enviando()" (click)="confirmarCompra()">
+        {{ enviando() ? 'Procesando...' : 'Confirmar y pagar' }}
+      </button>
+    </footer>
+  </div>
+</div>
+}
+
+@if (pedidoConfirmado(); as confirmado) {
+<div class="modal-pago-overlay">
+  <div class="modal-pago">
+    <header>
+      <h2>¡Pedido confirmado!</h2>
+      <button class="modal-close" (click)="cerrarConfirmacion()">✕</button>
+    </header>
+    <div class="modal-body">
+      <p>Tu pedido <strong>{{ confirmado.numero }}</strong> fue registrado correctamente.</p>
+      <p>Total pagado: <strong>S/ {{ confirmado.total.toFixed(2) }}</strong></p>
+      <p>Te contactaremos pronto para coordinar la entrega.</p>
+    </div>
+    <footer>
+      <div style="flex:1"></div>
+      <button class="btn-confirmar" (click)="cerrarConfirmacion()">Aceptar</button>
     </footer>
   </div>
 </div>

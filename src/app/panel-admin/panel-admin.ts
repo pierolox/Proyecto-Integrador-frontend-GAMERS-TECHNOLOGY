@@ -6,8 +6,9 @@ import { Productos } from './productos/productos';
 import { Categorias } from './categorias/categorias';
 import { Subcategorias } from './subcategorias/subcategorias';
 import { Pedidos } from './pedidos/pedidos';
+import { Usuarios } from './usuarios/usuarios';
 
-type Seccion = 'dashboard' | 'productos' | 'categorias' | 'subcategorias' | 'pedidos';
+type Seccion = 'dashboard' | 'productos' | 'categorias' | 'subcategorias' | 'pedidos' | 'usuarios';
 
 interface StatCard {
   label: string;
@@ -19,7 +20,7 @@ interface StatCard {
 @Component({
   selector: 'app-panel-admin',
   standalone: true,
-  imports: [Dashboard, Productos, Categorias, Subcategorias, Pedidos],
+  imports: [Dashboard, Productos, Categorias, Subcategorias, Pedidos, Usuarios],
   templateUrl: './panel-admin.html',
   styleUrl: './panel-admin.css',
 })
@@ -32,6 +33,7 @@ export class PanelAdmin {
     { id: 'categorias', label: 'Categorías', icon: 'tag' },
     { id: 'subcategorias', label: 'SubCategorías', icon: 'layers' },
     { id: 'pedidos', label: 'Pedidos', icon: 'cart' },
+    { id: 'usuarios', label: 'Usuarios', icon: 'usuarios' },
   ];
 
   stats: StatCard[] = [
