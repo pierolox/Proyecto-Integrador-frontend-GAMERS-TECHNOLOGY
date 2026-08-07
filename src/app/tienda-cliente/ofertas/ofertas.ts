@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import { Producto } from '../../shared/models/inventario.models';
 import { InventarioService } from '../services/inventario.service';
 
@@ -17,9 +17,13 @@ export class Ofertas {
   constructor(
     private inventario: InventarioService
   ) {
-    this.productos = this.inventario
-      .obtenerProductos()
-      .filter(p => p.precioAnterior);
+    // Los productos llegan de forma asíncrona (HTTP); se sincronizan
+    // cada vez que cambian en el servicio.
+    effect(() => {
+      this.productos = this.inventario
+        .productosSignal()()
+        .filter(p => p.precioAnterior);
+    });
   }
 
   obtenerNombreSubcategoria(id: number): string {

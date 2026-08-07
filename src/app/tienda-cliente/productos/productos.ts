@@ -43,17 +43,20 @@ export class Productos implements OnInit {
     private inventario: InventarioService,
     private carrito: CarritoService
   ) {
-    // Las categorías llegan de forma asíncrona (HTTP); se sincronizan
-    // cada vez que el signal del servicio cambia.
+    // Categorías, subcategorías y productos llegan de forma asíncrona
+    // (HTTP); se sincronizan cada vez que cambian en el servicio.
     effect(() => {
       this.categorias = this.inventario.categoriasSignal()();
+    });
+    effect(() => {
+      this.subcategorias = this.inventario.subcategoriasSignal()();
+    });
+    effect(() => {
+      this.todosLosProductos = this.inventario.productosSignal()();
     });
   }
 
   ngOnInit() {
-    this.subcategorias = this.inventario.obtenerSubcategorias();
-    this.todosLosProductos = this.inventario.obtenerProductos();
-
     this.soloNuevos.set(
       this.router.url.includes('/productos/nuevos')
     );

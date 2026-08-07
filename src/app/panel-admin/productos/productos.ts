@@ -35,9 +35,6 @@ export class Productos {
   subcategorias = this.inventario.subcategoriasSignal();
   productos = this.inventario.productosSignal();
 
-  private siguienteId =
-    Math.max(...this.productos().map(p => p.id), 0) + 1;
-
   // -------- búsqueda --------
   busqueda = signal('');
 
@@ -110,12 +107,7 @@ export class Productos {
         ...this.form
       });
     } else {
-      const nuevo: Producto = {
-        id: this.siguienteId++,
-        ...this.form
-      };
-
-      this.inventario.agregarProducto(nuevo);
+      this.inventario.agregarProducto({ ...this.form });
     }
 
     this.modalAbierto.set(false);

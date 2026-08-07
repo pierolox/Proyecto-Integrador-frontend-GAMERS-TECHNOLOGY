@@ -46,10 +46,17 @@ export class Home implements OnInit, OnDestroy {
     public inventario: InventarioService,
     private carrito: CarritoService
   ) {
-    // Las categorías llegan de forma asíncrona (HTTP); se sincronizan
-    // cada vez que el signal del servicio cambia.
+    // Categorías, subcategorías y productos llegan de forma asíncrona
+    // (HTTP); se sincronizan cada vez que cambian en el servicio.
     effect(() => {
       this.categorias = this.inventario.categoriasSignal()();
+    });
+    effect(() => {
+      this.subcategorias = this.inventario.subcategoriasSignal()();
+    });
+    effect(() => {
+      this.productos = this.inventario.productosSignal()();
+      this.productosNuevos = this.productos.filter((p) => p.esNuevo);
     });
   }
 
@@ -58,15 +65,6 @@ export class Home implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
-    this.subcategorias =
-      this.inventario.obtenerSubcategorias();
-
-    this.productos =
-      this.inventario.obtenerProductos();
-
-    this.productosNuevos =
-      this.inventario.obtenerProductosNuevos();
 
     this.actualizarVisibles();
 
