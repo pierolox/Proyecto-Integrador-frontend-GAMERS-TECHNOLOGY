@@ -9,7 +9,7 @@
             style="height:40px; padding:0 12px; border:1px solid var(--color-border); border-radius:var(--radius-sm); font-size:14px; font-family:inherit; color:var(--color-text); background:var(--color-surface); min-width:200px;"
             [ngModel]="filtroCategoriaId()" (ngModelChange)="filtroCategoriaId.set($event)">
             <option [ngValue]="0">Todas las categorías</option>
-            @for (c of categorias; track c.id) {
+            @for (c of categorias(); track c.id) {
             <option [ngValue]="c.id">{{ c.nombre }}</option>
             }
         </select>
@@ -43,7 +43,7 @@
                     <td>{{ s.descripcion }}</td>
                     <td>
                         <span class="badge"
-                            [style.background]="categorias.find(c => c.id === s.categoriaId)?.colorInicio">
+                            [style.background]="categorias().find(c => c.id === s.categoriaId)?.colorInicio">
                             {{ nombreCategoria(s.categoriaId) }}
                         </span>
                     </td>
@@ -96,7 +96,7 @@
                     <label for="subCategoria">Categoría</label>
                     <select id="subCategoria" name="categoriaId" [(ngModel)]="form.categoriaId">
                         <option [ngValue]="0" disabled>Selecciona una categoría</option>
-                        @for (c of categorias; track c.id) {
+                        @for (c of categorias(); track c.id) {
                         <option [ngValue]="c.id">{{ c.nombre }}</option>
                         }
                     </select>

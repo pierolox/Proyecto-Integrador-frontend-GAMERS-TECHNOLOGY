@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, signal } from '@angular/core';
+import { Component, effect, Inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InventarioService } from '../services/inventario.service';
 import { CarritoService } from '../services/carrito.service';
@@ -42,10 +42,15 @@ export class Productos implements OnInit {
     private router: Router,
     private inventario: InventarioService,
     private carrito: CarritoService
-  ) { }
+  ) {
+    // Las categorías llegan de forma asíncrona (HTTP); se sincronizan
+    // cada vez que el signal del servicio cambia.
+    effect(() => {
+      this.categorias = this.inventario.categoriasSignal()();
+    });
+  }
 
   ngOnInit() {
-    this.categorias = this.inventario.obtenerCategorias();
     this.subcategorias = this.inventario.obtenerSubcategorias();
     this.todosLosProductos = this.inventario.obtenerProductos();
 

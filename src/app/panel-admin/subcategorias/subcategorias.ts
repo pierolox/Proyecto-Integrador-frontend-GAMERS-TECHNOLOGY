@@ -19,15 +19,13 @@ const FORM_VACIO: SubcategoriaForm = {
   styleUrl: "./subcategorias.css",
 })
 export class Subcategorias {
-  categorias!: Categoria[];
+  categorias!: ReturnType<InventarioService["categoriasSignal"]>;
 
   subcategorias!: ReturnType<InventarioService["subcategoriasSignal"]>;
-  private siguienteId = 1;
 
   constructor(private inventario: InventarioService) {
     this.subcategorias = this.inventario.subcategoriasSignal();
-    this.categorias = this.inventario.obtenerCategorias();
-    this.siguienteId = Math.max(...this.subcategorias().map((s) => s.id), 0) + 1;
+    this.categorias = this.inventario.categoriasSignal();
   }
 
   busqueda = signal("");
@@ -46,7 +44,7 @@ export class Subcategorias {
   });
 
   nombreCategoria(categoriaId: number): string {
-    return this.categorias.find((c) => c.id === categoriaId)?.nombre ?? "—";
+    return this.categorias().find((c) => c.id === categoriaId)?.nombre ?? "—";
   }
 
   // -------- modal crear/editar --------
@@ -79,12 +77,9 @@ export class Subcategorias {
 
     if (this.modoEdicion() && this.subcategoriaEditandoId() !== null) {
       const id = this.subcategoriaEditandoId()!;
-      this.subcategorias.update((lista) =>
-        lista.map((s) => (s.id === id ? { id, ...this.form } : s)),
-      );
+      this.inventario.actualizarSubcategoria({ id, ...this.form });
     } else {
-      const nueva: Subcategoria = { id: this.siguienteId++, ...this.form };
-      this.subcategorias.update((lista) => [nueva, ...lista]);
+      this.inventario.agregarSubcategoria({ ...this.form });
     }
 
     this.modalAbierto.set(false);

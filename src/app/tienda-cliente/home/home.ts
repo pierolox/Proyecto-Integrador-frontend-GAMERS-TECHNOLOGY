@@ -2,7 +2,7 @@ import { Router } from '@angular/router';
 import { Categoria, Subcategoria, Producto } from '../../shared/models/inventario.models';
 import { CarritoService } from '../services/carrito.service';
 import { InventarioService } from '../services/inventario.service';
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, effect, OnDestroy, OnInit, signal } from '@angular/core';
 
 interface Slide {
   titulo: string;
@@ -45,16 +45,19 @@ export class Home implements OnInit, OnDestroy {
     private router: Router,
     public inventario: InventarioService,
     private carrito: CarritoService
-  ) { }
+  ) {
+    // Las categorías llegan de forma asíncrona (HTTP); se sincronizan
+    // cada vez que el signal del servicio cambia.
+    effect(() => {
+      this.categorias = this.inventario.categoriasSignal()();
+    });
+  }
 
   obtenerCantidadProductos(categoriaId: number): number {
     return this.inventario.obtenerCantidadProductosPorCategoria(categoriaId);
   }
 
   ngOnInit() {
-
-    this.categorias =
-      this.inventario.obtenerCategorias();
 
     this.subcategorias =
       this.inventario.obtenerSubcategorias();
