@@ -34,6 +34,7 @@ export class Productos {
   categorias = this.inventario.categoriasSignal();
   subcategorias = this.inventario.subcategoriasSignal();
   productos = this.inventario.productosSignal();
+  errorGuardado = this.inventario.errorProductoSignal();
 
   // -------- búsqueda --------
   busqueda = signal('');
@@ -82,6 +83,7 @@ export class Productos {
     this.modoEdicion.set(false);
     this.productoEditandoId.set(null);
     this.form = { ...FORM_VACIO };
+    this.inventario.limpiarErrorProducto();
     this.modalAbierto.set(true);
   }
 
@@ -90,15 +92,22 @@ export class Productos {
     this.productoEditandoId.set(producto.id);
     const { id, ...resto } = producto;
     this.form = { ...resto };
+    this.inventario.limpiarErrorProducto();
     this.modalAbierto.set(true);
   }
 
   cerrarModal() {
     this.modalAbierto.set(false);
+    this.inventario.limpiarErrorProducto();
   }
 
   guardar() {
     if (!this.form.nombre.trim()) return;
+
+    if (!this.form.subcategoriaId) {
+      this.inventario.establecerErrorProducto('Selecciona una categoría y subcategoría antes de guardar.');
+      return;
+    }
 
     if (this.modoEdicion() && this.productoEditandoId() !== null) {
       const id = this.productoEditandoId()!;

@@ -140,6 +140,34 @@ export class InventarioService {
   private subcategorias = signal<Subcategoria[]>([]);
   private productos = signal<Producto[]>([]);
 
+  // Último mensaje de error de una operación de escritura (crear/editar/eliminar),
+  // para poder mostrarlo en la UI en vez de que falle en silencio.
+  private errorProducto = signal<string | null>(null);
+
+  errorProductoSignal() {
+    return this.errorProducto;
+  }
+
+  limpiarErrorProducto() {
+    this.errorProducto.set(null);
+  }
+
+  establecerErrorProducto(mensaje: string) {
+    this.errorProducto.set(mensaje);
+  }
+
+  private extraerMensajeError(err: any): string {
+    const cuerpo = err?.error;
+    if (cuerpo?.mensaje) return cuerpo.mensaje;
+    if (err?.status === 401 || err?.status === 403) {
+      return 'Tu sesión no tiene permisos o expiró. Vuelve a iniciar sesión.';
+    }
+    if (err?.status === 0) {
+      return 'No se pudo conectar con el servidor. ¿Está corriendo el backend?';
+    }
+    return 'Ocurrió un error inesperado al guardar. Revisa la consola para más detalle.';
+  }
+
   constructor(private http: HttpClient) {
     this.cargarCategorias();
     this.cargarSubcategorias();
@@ -322,6 +350,7 @@ export class InventarioService {
   }
 
   agregarProducto(producto: Omit<Producto, "id">) {
+    this.errorProducto.set(null);
     this.http
       .post<ProductoApi>(this.productosUrl, productoFrontendABackend(producto))
       .subscribe({
@@ -330,11 +359,15 @@ export class InventarioService {
             productoApiAFrontend(creado, this.subcategorias()),
             ...lista,
           ]),
-        error: (err) => console.error("No se pudo crear el producto", err),
+        error: (err) => {
+          console.error("No se pudo crear el producto", err);
+          this.errorProducto.set(this.extraerMensajeError(err));
+        },
       });
   }
 
   actualizarProducto(producto: Producto) {
+    this.errorProducto.set(null);
     this.http
       .put<ProductoApi>(`${this.productosUrl}/${producto.id}`, productoFrontendABackend(producto))
       .subscribe({
@@ -344,14 +377,21 @@ export class InventarioService {
               p.id === producto.id ? productoApiAFrontend(actualizado, this.subcategorias()) : p,
             ),
           ),
-        error: (err) => console.error("No se pudo actualizar el producto", err),
+        error: (err) => {
+          console.error("No se pudo actualizar el producto", err);
+          this.errorProducto.set(this.extraerMensajeError(err));
+        },
       });
   }
 
   eliminarProducto(id: number) {
+    this.errorProducto.set(null);
     this.http.delete<boolean>(`${this.productosUrl}/${id}`).subscribe({
       next: () => this.productos.update((lista) => lista.filter((p) => p.id !== id)),
-      error: (err) => console.error("No se pudo eliminar el producto", err),
+      error: (err) => {
+        console.error("No se pudo eliminar el producto", err);
+        this.errorProducto.set(this.extraerMensajeError(err));
+      },
     });
   }
 
