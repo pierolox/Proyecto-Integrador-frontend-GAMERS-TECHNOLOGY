@@ -2,8 +2,16 @@ import { Component, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData } from 'chart.js';
+import { PedidoService } from '../../tienda-cliente/services/pedido.service';
 
 type Vista = 'anio' | 'mes' | 'semana';
+
+const NOMBRES_MES = [
+  'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
+];
+
+const NOMBRES_DIA = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
 @Component({
   selector: 'app-dashboard',
@@ -13,40 +21,7 @@ type Vista = 'anio' | 'mes' | 'semana';
   styleUrl: './dashboard.css',
 })
 export class Dashboard {
-  // -------- datos de prueba (ficticios) --------
-  private ventasPorMes: Record<string, number> = {
-    Enero: 12500,
-    Febrero: 18200,
-    Marzo: 15700,
-    Abril: 21300,
-    Mayo: 19800,
-    Junio: 23400,
-    Julio: 26100,
-    Agosto: 24700,
-    Septiembre: 20900,
-    Octubre: 27600,
-    Noviembre: 31200,
-    Diciembre: 35800,
-  };
-
-  private ventasPorSemanaDelMes: Record<string, number> = {
-    'Semana 1': 4200,
-    'Semana 2': 5100,
-    'Semana 3': 3800,
-    'Semana 4': 4900,
-  };
-
-  private ventasPorDia: Record<string, number> = {
-    Lunes: 1200,
-    Martes: 1450,
-    Miércoles: 980,
-    Jueves: 1620,
-    Viernes: 2100,
-    Sábado: 2450,
-    Domingo: 1350,
-  };
-
-  meses = Object.keys(this.ventasPorMes);
+  meses = NOMBRES_MES;
 
   // -------- estado del selector --------
   vista = signal<Vista>('anio');
@@ -58,7 +33,13 @@ export class Dashboard {
   ];
 
   // Cuando la vista es "mes", se elige a qué mes pertenecen esas semanas.
-  mesSeleccionado = signal<string>('Enero');
+  mesSeleccionado = signal<string>(NOMBRES_MES[new Date().getMonth()]);
+
+  private pedidos!: ReturnType<PedidoService['pedidosSignal']>;
+
+  constructor(private pedidoService: PedidoService) {
+    this.pedidos = this.pedidoService.pedidosSignal();
+  }
 
   cambiarVista(id: Vista) {
     this.vista.set(id);
@@ -67,6 +48,72 @@ export class Dashboard {
   formatearSoles(valor: number): string {
     return 'S/. ' + valor.toLocaleString('es-PE');
   }
+
+  // -------- agregaciones sobre los pedidos reales --------
+
+  // Ventas por mes, dentro del año actual.
+  private ventasPorMes = computed<Record<string, number>>(() => {
+    const anioActual = new Date().getFullYear();
+    const totales: Record<string, number> = {};
+    NOMBRES_MES.forEach((m) => (totales[m] = 0));
+
+    this.pedidos().forEach((p) => {
+      const fecha = new Date(p.fecha);
+      if (fecha.getFullYear() === anioActual) {
+        totales[NOMBRES_MES[fecha.getMonth()]] += p.total;
+      }
+    });
+
+    return totales;
+  });
+
+  // Ventas por semana, dentro del mes seleccionado.
+  private ventasPorSemanaDelMes = computed<Record<string, number>>(() => {
+    const indiceMes = NOMBRES_MES.indexOf(this.mesSeleccionado());
+    const anioActual = new Date().getFullYear();
+    const totales: Record<string, number> = {
+      'Semana 1': 0,
+      'Semana 2': 0,
+      'Semana 3': 0,
+      'Semana 4': 0,
+      'Semana 5': 0,
+    };
+
+    this.pedidos().forEach((p) => {
+      const fecha = new Date(p.fecha);
+      if (fecha.getFullYear() === anioActual && fecha.getMonth() === indiceMes) {
+        const semana = Math.min(5, Math.ceil(fecha.getDate() / 7));
+        totales[`Semana ${semana}`] += p.total;
+      }
+    });
+
+    return totales;
+  });
+
+  // Ventas por día, dentro de la semana actual (lunes a domingo).
+  private ventasPorDia = computed<Record<string, number>>(() => {
+    const hoy = new Date();
+    const diaSemanaHoy = (hoy.getDay() + 6) % 7; // 0 = lunes
+    const lunes = new Date(hoy);
+    lunes.setDate(hoy.getDate() - diaSemanaHoy);
+    lunes.setHours(0, 0, 0, 0);
+    const domingo = new Date(lunes);
+    domingo.setDate(lunes.getDate() + 6);
+    domingo.setHours(23, 59, 59, 999);
+
+    const totales: Record<string, number> = {};
+    NOMBRES_DIA.forEach((d) => (totales[d] = 0));
+
+    this.pedidos().forEach((p) => {
+      const fecha = new Date(p.fecha);
+      if (fecha >= lunes && fecha <= domingo) {
+        const indice = (fecha.getDay() + 6) % 7;
+        totales[NOMBRES_DIA[indice]] += p.total;
+      }
+    });
+
+    return totales;
+  });
 
   totalPeriodo = computed(() => {
     const datos = this.chartData();
@@ -83,16 +130,19 @@ export class Dashboard {
     let etiquetaSerie = 'Ventas';
 
     if (vistaActual === 'anio') {
+      const ventas = this.ventasPorMes();
       labels = this.meses;
-      data = this.meses.map((m) => this.ventasPorMes[m]);
+      data = this.meses.map((m) => ventas[m]);
       etiquetaSerie = 'Ventas por mes (S/.)';
     } else if (vistaActual === 'mes') {
-      labels = Object.keys(this.ventasPorSemanaDelMes);
-      data = Object.values(this.ventasPorSemanaDelMes);
+      const ventas = this.ventasPorSemanaDelMes();
+      labels = Object.keys(ventas);
+      data = Object.values(ventas);
       etiquetaSerie = `Ventas por semana · ${this.mesSeleccionado()} (S/.)`;
     } else {
-      labels = Object.keys(this.ventasPorDia);
-      data = Object.values(this.ventasPorDia);
+      const ventas = this.ventasPorDia();
+      labels = Object.keys(ventas);
+      data = Object.values(ventas);
       etiquetaSerie = 'Ventas por día · esta semana (S/.)';
     }
 

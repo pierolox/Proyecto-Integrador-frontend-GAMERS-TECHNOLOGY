@@ -1,0 +1,57 @@
+<div class="toolbar">
+    <div class="toolbar-search">
+        <input type="text" placeholder="Buscar por usuario o correo..." [ngModel]="busqueda()"
+            (ngModelChange)="busqueda.set($event)" />
+    </div>
+</div>
+
+@if (cargando()) {
+<div class="table-card">
+    <p style="padding:24px; text-align:center; color:#6b7280;">Cargando usuarios...</p>
+</div>
+} @else if (error()) {
+<div class="table-card">
+    <p style="padding:24px; text-align:center; color:#991b1b;">{{ error() }}</p>
+</div>
+} @else {
+<div class="table-card">
+    <div class="table-scroll">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Correo</th>
+                    <th>Rol</th>
+                    <th>Fecha de registro</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (u of usuariosFiltrados(); track u.id) {
+                <tr>
+                    <td class="cell-title">{{ u.usuario }}</td>
+                    <td>{{ u.correo }}</td>
+                    <td>
+                        <span class="badge" [class.badge-success]="u.rol === 'ADMIN'" [class.badge-muted]="u.rol !== 'ADMIN'">
+                            {{ u.rol }}
+                        </span>
+                    </td>
+                    <td>{{ formatearFecha(u.fechaRegistro) }}</td>
+                    <td>
+                        <div class="row-actions">
+                            <button type="button" class="icon-btn" title="Eliminar usuario" (click)="eliminar(u.id, u.usuario)">
+                                <svg viewBox="0 0 24 24" fill="none"><path d="M4 7H20M9 7V4.5C9 3.7 9.7 3 10.5 3H13.5C14.3 3 15 3.7 15 4.5V7M18 7L17.3 19C17.2 20.1 16.3 21 15.2 21H8.8C7.7 21 6.8 20.1 6.7 19L6 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                } @empty {
+                <tr class="empty-row">
+                    <td colspan="5">No hay usuarios registrados.</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+}
