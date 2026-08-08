@@ -112,7 +112,7 @@
 
         @for (p of productosFiltrados; track p.id) {
 
-        <div class="producto-card">
+        <div class="producto-card" [routerLink]="['/productos', p.id]" style="cursor:pointer;">
 
           <div
             class="producto-imagen"
@@ -210,7 +210,7 @@
 
           </div>
 
-          <button class="btn-agregar" (click)="agregarAlCarrito(p)">
+          <button class="btn-agregar" (click)="$event.stopPropagation(); agregarAlCarrito(p)">
 
             Agregar al carrito
 

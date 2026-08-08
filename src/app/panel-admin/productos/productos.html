@@ -162,6 +162,16 @@
                         <option value="Inactivo">Inactivo</option>
                     </select>
                 </div>
+
+                @if (modoEdicion()) {
+                <div class="form-group">
+                    <label for="prodEsNuevo" style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                        <input type="checkbox" id="prodEsNuevo" name="esNuevo" [(ngModel)]="form.esNuevo" style="width:auto;" />
+                        Mostrar en "Nuevos productos" del home
+                    </label>
+                    <span class="form-hint">Todo producto nuevo aparece aquí marcado por defecto; desmárcalo cuando ya no sea una novedad.</span>
+                </div>
+                }
             </form>
         </div>
 

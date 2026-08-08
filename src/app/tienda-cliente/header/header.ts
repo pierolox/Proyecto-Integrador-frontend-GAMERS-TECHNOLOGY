@@ -1,7 +1,8 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, ElementRef, HostListener, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CarritoService } from '../services/carrito.service';
+import { AuthService } from '../../auth.service';
 
 @Component({
   selector: 'app-header',
@@ -12,41 +13,45 @@ import { CarritoService } from '../services/carrito.service';
 })
 export class Header {
   menuAbierto = signal(false);
-  userName = signal<string | null>(null);
+  menuUsuarioAbierto = signal(false);
 
-  constructor(private router: Router, private carrito: CarritoService) {}
+  constructor(
+    private router: Router,
+    private carrito: CarritoService,
+    public authService: AuthService,
+    private elementRef: ElementRef,
+  ) {}
+
+  @HostListener('document:click', ['$event'])
+  onClickFuera(event: MouseEvent) {
+    if (this.menuUsuarioAbierto() && !this.elementRef.nativeElement.contains(event.target)) {
+      this.menuUsuarioAbierto.set(false);
+    }
+  }
 
   get cantidadCarrito(): number {
     return this.carrito.cantidadProductos();
   }
 
   get isLoggedIn(): boolean {
-    return this.userName() !== null;
+    return this.authService.isAuthenticated();
   }
 
-  ngOnInit() {
-    this.loadUser();
-    window.addEventListener('usuario-cambiado', () => this.loadUser());
+  get nombreUsuario(): string | null {
+    return this.authService.usuarioActual();
   }
 
-  loadUser() {
-    try {
-      const raw = localStorage.getItem('usuario');
-      if (raw) {
-        const u = JSON.parse(raw);
-        this.userName.set(u.nombre ?? u.usuario ?? null);
-      } else {
-        this.userName.set(null);
-      }
-    } catch (e) {
-      this.userName.set(null);
-    }
+  toggleMenuUsuario() {
+    this.menuUsuarioAbierto.update((v) => !v);
+  }
+
+  cerrarMenuUsuario() {
+    this.menuUsuarioAbierto.set(false);
   }
 
   logout() {
-    localStorage.removeItem('usuario');
-    window.dispatchEvent(new CustomEvent('usuario-cambiado'));
-    this.userName.set(null);
+    this.authService.logout();
+    this.cerrarMenuUsuario();
     this.router.navigate(['/']);
   }
 
@@ -56,5 +61,6 @@ export class Header {
 
   cerrarMenu() {
     this.menuAbierto.set(false);
+    this.menuUsuarioAbierto.set(false);
   }
 }

@@ -16,6 +16,7 @@ import { Ofertas } from './tienda-cliente/ofertas/ofertas';
 import { Nosotros } from './tienda-cliente/nosotros/nosotros';
 import { Contactanos } from './tienda-cliente/contactanos/contactanos';
 import { Busqueda } from './tienda-cliente/busqueda/busqueda';
+import { ProductoDetalle } from './tienda-cliente/producto-detalle/producto-detalle';
 
 export const routes: Routes = [
   // Acceso del administrador
@@ -32,6 +33,7 @@ export const routes: Routes = [
       { path: '', component: Home },
       { path: 'productos', component: TiendaProductos },
       { path: 'productos/nuevos', component: TiendaProductos },
+      { path: 'productos/:id', component: ProductoDetalle },
       { path: 'carrito', component: Carrito },
       { path: 'ofertas', component: Ofertas },
       { path: 'nosotros', component: Nosotros },

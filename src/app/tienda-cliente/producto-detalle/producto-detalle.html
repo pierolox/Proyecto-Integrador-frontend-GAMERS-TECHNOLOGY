@@ -1,0 +1,77 @@
+<section class="detalle-seccion">
+  <div class="contenedor">
+
+    @if (cargando()) {
+    <p class="estado-info">Cargando producto...</p>
+    } @else if (!producto()) {
+    <div class="estado-info">
+      <p>No encontramos este producto. Puede que ya no esté disponible.</p>
+      <a routerLink="/productos" class="btn-volver">Volver a productos</a>
+    </div>
+    } @else {
+    @let p = producto()!;
+
+    <a routerLink="/productos" class="volver">← Volver a productos</a>
+
+    <div class="detalle-grid">
+      <div
+        class="detalle-imagen"
+        [style.background]="'linear-gradient(135deg,' + p.colorInicio + ',' + p.colorFin + ')'">
+        @if (p.esNuevo) {
+        <span class="etiqueta etiqueta-nuevo">Nuevo</span>
+        }
+        @if (p.precioAnterior) {
+        <span class="etiqueta etiqueta-descuento">Oferta</span>
+        }
+        <span class="detalle-icono">{{ p.icono }}</span>
+      </div>
+
+      <div class="detalle-info">
+        <p class="categoria-chip">{{ nombreSubcategoria(p.subcategoriaId) }}</p>
+        <h1>{{ p.nombre }}</h1>
+
+        <div class="rating">
+          @for (e of [1, 2, 3, 4, 5]; track e) {
+          <span [class.lleno]="e <= p.rating">★</span>
+          }
+          <span class="rating-num">({{ p.rating }})</span>
+        </div>
+
+        <p class="descripcion">{{ p.descripcion || 'Sin descripción disponible.' }}</p>
+
+        <div class="precios">
+          <span class="precio">S/ {{ p.precio.toFixed(2) }}</span>
+          @if (p.precioAnterior) {
+          <span class="precio-anterior">S/ {{ p.precioAnterior.toFixed(2) }}</span>
+          }
+        </div>
+
+        <p class="stock" [class.stock-bajo]="p.stock <= 5" [class.sin-stock]="p.stock <= 0">
+          @if (p.stock > 0) {
+          {{ p.stock }} unidad(es) disponibles
+          } @else {
+          Sin stock disponible
+          }
+        </p>
+
+        @if (p.stock > 0) {
+        <div class="acciones-compra">
+          <div class="cantidad-control">
+            <button type="button" class="btn-cantidad" [disabled]="cantidad() <= 1" (click)="disminuir()" aria-label="Disminuir cantidad">−</button>
+            <span class="cantidad-valor">{{ cantidad() }}</span>
+            <button type="button" class="btn-cantidad" [disabled]="cantidad() >= p.stock" (click)="aumentar()" aria-label="Aumentar cantidad">+</button>
+          </div>
+
+          @if (!agregado()) {
+          <button type="button" class="btn-agregar-detalle" (click)="agregarAlCarrito()">Agregar al carrito</button>
+          } @else {
+          <button type="button" class="btn-ir-carrito" (click)="irAlCarrito()">✓ Agregado — Ver carrito</button>
+          }
+        </div>
+        }
+      </div>
+    </div>
+    }
+
+  </div>
+</section>

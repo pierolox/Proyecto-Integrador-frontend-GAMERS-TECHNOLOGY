@@ -1,11 +1,12 @@
 import { Component, effect } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Producto } from '../../shared/models/inventario.models';
 import { InventarioService } from '../services/inventario.service';
 
 @Component({
   selector: 'app-ofertas',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './ofertas.html',
   styleUrl: './ofertas.css',
 })

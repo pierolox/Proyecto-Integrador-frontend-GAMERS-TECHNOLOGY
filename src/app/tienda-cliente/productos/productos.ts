@@ -1,5 +1,5 @@
 import { Component, effect, Inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { InventarioService } from '../services/inventario.service';
 import { CarritoService } from '../services/carrito.service';
 import { Categoria, Subcategoria, Producto } from '../../shared/models/inventario.models';
@@ -7,7 +7,7 @@ import { Categoria, Subcategoria, Producto } from '../../shared/models/inventari
 @Component({
   selector: 'app-productos',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './productos.html',
   styleUrl: './productos.css',
 })

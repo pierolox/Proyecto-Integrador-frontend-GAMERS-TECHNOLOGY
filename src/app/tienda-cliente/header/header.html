@@ -20,7 +20,16 @@
 
     <div class="acciones">
       @if (isLoggedIn) {
-      <button class="btn-logout" (click)="logout()">Cerrar sesión</button>
+      <div class="usuario-menu">
+        <button class="btn-usuario" (click)="toggleMenuUsuario()">
+          👤 {{ nombreUsuario }}
+        </button>
+        @if (menuUsuarioAbierto()) {
+        <div class="usuario-dropdown">
+          <button class="dropdown-item" (click)="logout()">Cerrar sesión</button>
+        </div>
+        }
+      </div>
       } @else {
       <a class="btn-login" routerLink="/login" (click)="cerrarMenu()">Iniciar sesión</a>
       }

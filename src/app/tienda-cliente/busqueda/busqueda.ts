@@ -1,11 +1,12 @@
 import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { InventarioService } from '../services/inventario.service';
 
 @Component({
   selector: 'app-busqueda',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './busqueda.html',
   styleUrl: './busqueda.css',
 })

@@ -6,7 +6,7 @@
 
     <div class="grid-productos">
       @for (producto of productos; track producto.id) {
-      <article class="card-producto">
+      <article class="card-producto" [routerLink]="['/productos', producto.id]" style="cursor:pointer;">
         <div class="icono">{{ producto.icono }}</div>
         <h3>{{ producto.nombre }}</h3>
         <p class="categoria">

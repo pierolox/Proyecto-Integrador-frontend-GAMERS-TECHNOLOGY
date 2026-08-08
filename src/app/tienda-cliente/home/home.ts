@@ -1,4 +1,4 @@
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Categoria, Subcategoria, Producto } from '../../shared/models/inventario.models';
 import { CarritoService } from '../services/carrito.service';
 import { InventarioService } from '../services/inventario.service';
@@ -17,7 +17,7 @@ interface Slide {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
