@@ -116,7 +116,7 @@
 
           <div
             class="producto-imagen"
-            [style.background]="'linear-gradient(135deg,' + p.colorInicio + ',' + p.colorFin + ')'">
+            [style.background]="!resolverUrlImagen(p.imagen) ? 'linear-gradient(135deg,' + p.colorInicio + ',' + p.colorFin + ')' : null">
 
             @if (p.esNuevo) {
 
@@ -138,11 +138,19 @@
 
             }
 
+            @if (resolverUrlImagen(p.imagen); as url) {
+
+            <img [src]="url" [alt]="p.nombre" class="producto-foto" />
+
+            } @else {
+
             <span class="producto-icono">
 
               {{ p.icono }}
 
             </span>
+
+            }
 
           </div>
 

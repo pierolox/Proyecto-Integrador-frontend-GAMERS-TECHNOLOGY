@@ -16,14 +16,18 @@
     <div class="detalle-grid">
       <div
         class="detalle-imagen"
-        [style.background]="'linear-gradient(135deg,' + p.colorInicio + ',' + p.colorFin + ')'">
+        [style.background]="!inventario.resolverUrlImagen(p.imagen) ? 'linear-gradient(135deg,' + p.colorInicio + ',' + p.colorFin + ')' : null">
         @if (p.esNuevo) {
         <span class="etiqueta etiqueta-nuevo">Nuevo</span>
         }
         @if (p.precioAnterior) {
         <span class="etiqueta etiqueta-descuento">Oferta</span>
         }
+        @if (inventario.resolverUrlImagen(p.imagen); as url) {
+        <img [src]="url" [alt]="p.nombre" class="detalle-foto" />
+        } @else {
         <span class="detalle-icono">{{ p.icono }}</span>
+        }
       </div>
 
       <div class="detalle-info">

@@ -20,7 +20,13 @@
     <div class="grid-productos">
       @for (producto of productosFiltrados(); track producto.id) {
       <article class="card-producto" [routerLink]="['/productos', producto.id]" style="cursor:pointer;">
-        <div class="icono">{{ producto.icono }}</div>
+        <div class="imagen-producto">
+          @if (resolverUrlImagen(producto.imagen); as url) {
+          <img [src]="url" [alt]="producto.nombre" />
+          } @else {
+          <div class="icono">{{ producto.icono }}</div>
+          }
+        </div>
         <h3>{{ producto.nombre }}</h3>
         <p class="categoria">
           {{ obtenerNombreSubcategoria(producto.subcategoriaId) }}

@@ -173,6 +173,19 @@ export class InventarioService {
     this.cargarSubcategorias();
   }
 
+  // La BD guarda "imagen" como ruta relativa cuando se sube un archivo
+  // (ej. "/uploads/productos/xxx.jpg", servida por el backend en :8080),
+  // o como URL absoluta si el admin pegó un link externo. Esta función
+  // arma la URL final que el navegador puede cargar directamente.
+  resolverUrlImagen(imagen: string | null | undefined): string | null {
+    if (!imagen) return null;
+    if (imagen.startsWith('http://') || imagen.startsWith('https://') || imagen.startsWith('data:')) {
+      return imagen;
+    }
+    const base = environment.apiUrl.replace(/\/api\/?$/, '');
+    return imagen.startsWith('/') ? `${base}${imagen}` : `${base}/${imagen}`;
+  }
+
   private cargarCategorias() {
     this.http.get<CategoriaApi[]>(this.categoriasUrl).subscribe({
       next: (lista) => this.categorias.set(lista.map(categoriaApiAFrontend)),
@@ -347,6 +360,14 @@ export class InventarioService {
 
   productosSignal() {
     return this.productos;
+  }
+
+  // Sube el archivo de imagen al backend y devuelve la URL pública
+  // (ej. "/uploads/productos/xxxx.jpg") lista para guardar en producto.imagen.
+  subirImagenProducto(archivo: File) {
+    const formData = new FormData();
+    formData.append("archivo", archivo);
+    return this.http.post<{ url: string }>(`${this.productosUrl}/imagen`, formData);
   }
 
   agregarProducto(producto: Omit<Producto, "id">) {

@@ -118,6 +118,10 @@ export class Productos implements OnInit {
     this.carrito.agregarProducto(producto);
   }
 
+  resolverUrlImagen(imagen: string | null | undefined): string | null {
+    return this.inventario.resolverUrlImagen(imagen);
+  }
+
   // =====================================================
   // TÍTULO
   // =====================================================

@@ -74,9 +74,13 @@
         <div class="producto-card" [style.flex]="'0 0 ' + (100 / productosVisibles()) + '%'"
           [routerLink]="['/productos', p.id]" style="cursor:pointer;">
           <div class="producto-imagen"
-            [style.background]="'linear-gradient(135deg,' + p.colorInicio + ',' + p.colorFin + ')'">
+            [style.background]="!inventario.resolverUrlImagen(p.imagen) ? 'linear-gradient(135deg,' + p.colorInicio + ',' + p.colorFin + ')' : null">
             <span class="etiqueta-nuevo">Nuevo</span>
+            @if (inventario.resolverUrlImagen(p.imagen); as url) {
+            <img [src]="url" [alt]="p.nombre" class="producto-foto" />
+            } @else {
             <span class="producto-icono">{{ p.icono }}</span>
+            }
           </div>
           <h3>{{ p.nombre }}</h3>
           <p class="categoria-chip">

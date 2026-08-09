@@ -1,4 +1,5 @@
 <div class="login-container">
+    <div class="login-panel-form">
     <div class="backdrop"></div>
     <div class="noise"></div>
 
@@ -116,5 +117,58 @@
             </div>
         </form>
         }
+    </div>
+    </div>
+
+    <div class="login-panel-visual">
+        <div class="glow-1"></div>
+        <div class="glow-2"></div>
+
+        <svg class="visual-ilustracion" viewBox="0 0 360 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- estrellas decorativas -->
+            <circle cx="40" cy="40" r="2.5" fill="#22d3ee" opacity="0.8"/>
+            <circle cx="320" cy="60" r="3" fill="#a5b4fc" opacity="0.7"/>
+            <circle cx="30" cy="230" r="2" fill="#a5b4fc" opacity="0.6"/>
+            <circle cx="335" cy="220" r="2.5" fill="#22d3ee" opacity="0.7"/>
+            <path d="M300 30l3 8 8 3-8 3-3 8-3-8-8-3 8-3z" fill="#22d3ee" opacity="0.85"/>
+            <path d="M50 190l2.5 6.5 6.5 2.5-6.5 2.5-2.5 6.5-2.5-6.5-6.5-2.5 6.5-2.5z" fill="#a5b4fc" opacity="0.7"/>
+
+            <!-- monitor -->
+            <rect x="80" y="55" width="200" height="130" rx="12" fill="#211f4d" stroke="#4c4a9a" stroke-width="2"/>
+            <rect x="94" y="69" width="172" height="102" rx="6" fill="url(#pantalla)"/>
+            <rect x="160" y="185" width="40" height="18" fill="#3d3b7a"/>
+            <rect x="140" y="203" width="80" height="10" rx="5" fill="#4c4a9a"/>
+
+            <!-- contenido de la pantalla: barras tipo gráfico -->
+            <rect x="112" y="130" width="16" height="30" rx="3" fill="#6366f1"/>
+            <rect x="136" y="115" width="16" height="45" rx="3" fill="#22d3ee"/>
+            <rect x="160" y="100" width="16" height="60" rx="3" fill="#818cf8"/>
+            <rect x="184" y="120" width="16" height="40" rx="3" fill="#22d3ee"/>
+            <rect x="208" y="90" width="16" height="70" rx="3" fill="#6366f1"/>
+            <path d="M108 92c14-18 30-22 48-10s34 6 46-8" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.9"/>
+
+            <!-- control (gamepad) flotando -->
+            <g transform="translate(0,6)">
+                <path d="M118 226c0-14 12-24 28-24h68c16 0 28 10 28 24 0 12-8 20-18 20-8 0-12-6-18-6h-52c-6 0-10 6-18 6-10 0-18-8-18-20z"
+                    fill="#2d2b66" stroke="#6366f1" stroke-width="2"/>
+                <circle cx="150" cy="222" r="4" fill="#22d3ee"/>
+                <circle cx="140" cy="232" r="4" fill="#22d3ee"/>
+                <rect x="145" y="217" width="10" height="20" rx="2" fill="#22d3ee" opacity="0"/>
+                <circle cx="228" cy="220" r="5" fill="#a5b4fc"/>
+                <circle cx="244" cy="230" r="5" fill="#22d3ee"/>
+            </g>
+
+            <defs>
+                <linearGradient id="pantalla" x1="94" y1="69" x2="266" y2="171" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#312e81"/>
+                    <stop offset="1" stop-color="#1e1b3a"/>
+                </linearGradient>
+            </defs>
+        </svg>
+
+        <div class="visual-texto">
+            <h2>Bienvenido a <strong>GAMERS TECHNOLOGY</strong></h2>
+            <p>Componentes, periféricos y consolas seleccionados para armar el setup que necesitas. Inicia sesión para comprar, seguir tus pedidos y más.</p>
+        </div>
     </div>
 </div>

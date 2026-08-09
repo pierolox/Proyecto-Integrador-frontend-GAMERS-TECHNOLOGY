@@ -23,4 +23,8 @@ export class Busqueda {
       .obtenerSubcategorias()
       .find((s) => s.id === id)?.nombre ?? '';
   }
+
+  resolverUrlImagen(imagen: string | null | undefined): string | null {
+    return this.inventario.resolverUrlImagen(imagen);
+  }
 }

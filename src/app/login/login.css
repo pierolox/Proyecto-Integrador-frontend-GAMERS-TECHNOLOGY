@@ -6,11 +6,20 @@
     height: 100vh;
 
     display: flex;
+
+    overflow: hidden;
+}
+
+.login-panel-form {
+    position: relative;
+    flex: 1 1 50%;
+
+    display: flex;
     justify-content: center;
     align-items: center;
 
-    overflow: hidden;
     padding: 20px;
+    overflow: hidden;
 }
 
 .backdrop {
@@ -42,6 +51,95 @@
         );
 
     pointer-events: none;
+}
+
+/* -------- panel visual (derecha) -------- */
+
+.login-panel-visual {
+    position: relative;
+    flex: 1 1 50%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+
+    padding: 40px;
+    overflow: hidden;
+
+    background: linear-gradient(150deg, #0f1024 0%, #1a1a3d 45%, #22197a 100%);
+}
+
+.login-panel-visual .glow-1,
+.login-panel-visual .glow-2 {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    pointer-events: none;
+}
+
+.login-panel-visual .glow-1 {
+    width: 340px;
+    height: 340px;
+    top: -80px;
+    right: -80px;
+    background: rgba(34, 211, 238, 0.35);
+}
+
+.login-panel-visual .glow-2 {
+    width: 300px;
+    height: 300px;
+    bottom: -100px;
+    left: -60px;
+    background: rgba(99, 102, 241, 0.4);
+}
+
+.visual-ilustracion {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 360px;
+    animation: float-illustration 4.5s ease-in-out infinite;
+}
+
+@keyframes float-illustration {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+}
+
+.visual-texto {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 380px;
+}
+
+.visual-texto h2 {
+    color: #fff;
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0 0 10px;
+}
+
+.visual-texto h2 strong {
+    color: #22d3ee;
+}
+
+.visual-texto p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+@media (max-width: 860px) {
+    .login-panel-visual {
+        display: none;
+    }
+    .login-panel-form {
+        flex: 1 1 100%;
+    }
 }
 
 .login-card {
