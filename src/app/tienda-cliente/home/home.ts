@@ -64,6 +64,14 @@ export class Home implements OnInit, OnDestroy {
     return this.inventario.obtenerCantidadProductosPorCategoria(categoriaId);
   }
 
+  obtenerImagenCategoria(categoriaId: number): string | null {
+    const producto = this.inventario
+      .obtenerProductosPorCategoria(categoriaId)
+      .find((p) => !!this.inventario.resolverUrlImagen(p.imagen));
+
+    return producto ? this.inventario.resolverUrlImagen(producto.imagen) : null;
+  }
+
   ngOnInit() {
 
     this.actualizarVisibles();

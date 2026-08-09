@@ -1,11 +1,10 @@
 :host {
   display: flex;
-  flex: 1;
 }
 
-.pagina-seccion {  min-height: 100vh;  padding: 3rem 1.5rem;
+.pagina-seccion {
+  padding: 3rem 1.5rem;
   background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
-  flex: 1;
   display: flex;
   align-items: flex-start;
   justify-content: center;

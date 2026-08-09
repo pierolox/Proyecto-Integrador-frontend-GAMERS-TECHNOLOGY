@@ -15,6 +15,9 @@ import { Carrito } from './tienda-cliente/carrito/carrito';
 import { Ofertas } from './tienda-cliente/ofertas/ofertas';
 import { Nosotros } from './tienda-cliente/nosotros/nosotros';
 import { Contactanos } from './tienda-cliente/contactanos/contactanos';
+import { Faq } from './tienda-cliente/faq/faq';
+import { Envios } from './tienda-cliente/envios/envios';
+import { Devoluciones } from './tienda-cliente/devoluciones/devoluciones';
 import { Busqueda } from './tienda-cliente/busqueda/busqueda';
 import { ProductoDetalle } from './tienda-cliente/producto-detalle/producto-detalle';
 
@@ -38,6 +41,9 @@ export const routes: Routes = [
       { path: 'ofertas', component: Ofertas },
       { path: 'nosotros', component: Nosotros },
       { path: 'contactanos', component: Contactanos },
+      { path: 'faq', component: Faq },
+      { path: 'envios', component: Envios },
+      { path: 'devoluciones', component: Devoluciones },
       { path: 'busqueda', component: Busqueda },
     ],
   },

@@ -1,12 +1,10 @@
 :host {
   display: flex;
-  flex: 1;
 }
 
 .pagina-seccion {
   padding: 3rem 1.5rem;
   background: linear-gradient(135deg, #111827 0%, #18181b 100%);
-  flex: 1;
   display: flex;
   align-items: flex-start;
   justify-content: center;
