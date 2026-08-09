@@ -64,9 +64,14 @@ export class Home implements OnInit, OnDestroy {
     return this.inventario.obtenerCantidadProductosPorCategoria(categoriaId);
   }
 
-  obtenerImagenCategoria(categoriaId: number): string | null {
+  obtenerImagenCategoria(cat: Categoria): string | null {
+    const propia = this.inventario.resolverUrlImagen(cat.imagen);
+    if (propia) return propia;
+
+    // Si la categoría todavía no tiene imagen propia, se usa como
+    // respaldo la foto del primer producto de esa categoría que tenga una.
     const producto = this.inventario
-      .obtenerProductosPorCategoria(categoriaId)
+      .obtenerProductosPorCategoria(cat.id)
       .find((p) => !!this.inventario.resolverUrlImagen(p.imagen));
 
     return producto ? this.inventario.resolverUrlImagen(producto.imagen) : null;

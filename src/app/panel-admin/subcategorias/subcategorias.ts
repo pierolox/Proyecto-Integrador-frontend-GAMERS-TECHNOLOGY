@@ -9,6 +9,7 @@ const FORM_VACIO: SubcategoriaForm = {
   categoriaId: 0,
   nombre: "",
   descripcion: "",
+  imagen: "",
 };
 
 @Component({
@@ -47,6 +48,55 @@ export class Subcategorias {
     return this.categorias().find((c) => c.id === categoriaId)?.nombre ?? "—";
   }
 
+  // -------- subida de imagen --------
+  subiendoImagen = signal(false);
+  errorImagen = signal<string | null>(null);
+
+  resolverUrlImagen(imagen: string | null | undefined): string | null {
+    return this.inventario.resolverUrlImagen(imagen);
+  }
+
+  onArchivoSeleccionado(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const archivo = input.files?.[0];
+    if (!archivo) return;
+
+    const tiposPermitidos = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (!tiposPermitidos.includes(archivo.type)) {
+      this.errorImagen.set('Formato no permitido. Usa JPG, PNG, WEBP o GIF.');
+      input.value = '';
+      return;
+    }
+
+    if (archivo.size > 5 * 1024 * 1024) {
+      this.errorImagen.set('La imagen no puede pesar más de 5MB.');
+      input.value = '';
+      return;
+    }
+
+    this.errorImagen.set(null);
+    this.subiendoImagen.set(true);
+
+    this.inventario.subirImagenSubcategoria(archivo).subscribe({
+      next: (res) => {
+        this.form.imagen = res.url;
+        this.subiendoImagen.set(false);
+      },
+      error: (err) => {
+        console.error('No se pudo subir la imagen', err);
+        this.errorImagen.set(err?.error?.mensaje ?? 'No se pudo subir la imagen. Intenta de nuevo.');
+        this.subiendoImagen.set(false);
+      },
+    });
+
+    input.value = '';
+  }
+
+  quitarImagen() {
+    this.form.imagen = '';
+    this.errorImagen.set(null);
+  }
+
   // -------- modal crear/editar --------
   modalAbierto = signal(false);
   modoEdicion = signal(false);
@@ -57,6 +107,7 @@ export class Subcategorias {
     this.modoEdicion.set(false);
     this.subcategoriaEditandoId.set(null);
     this.form = { ...FORM_VACIO };
+    this.errorImagen.set(null);
     this.modalAbierto.set(true);
   }
 
@@ -65,11 +116,13 @@ export class Subcategorias {
     this.subcategoriaEditandoId.set(subcategoria.id);
     const { id, ...resto } = subcategoria;
     this.form = { ...resto };
+    this.errorImagen.set(null);
     this.modalAbierto.set(true);
   }
 
   cerrarModal() {
     this.modalAbierto.set(false);
+    this.errorImagen.set(null);
   }
 
   guardar() {

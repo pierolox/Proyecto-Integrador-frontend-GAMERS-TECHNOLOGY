@@ -2,7 +2,7 @@ export interface Categoria {
   id: number;
   nombre: string;
   descripcion: string;
-  icono: string;
+  imagen: string;
   colorInicio: string;
   colorFin: string;
 }
@@ -12,6 +12,7 @@ export interface Subcategoria {
   categoriaId: number;
   nombre: string;
   descripcion: string;
+  imagen: string;
 }
 
 export interface Producto {

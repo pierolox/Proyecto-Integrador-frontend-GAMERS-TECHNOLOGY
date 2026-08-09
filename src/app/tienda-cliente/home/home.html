@@ -41,11 +41,11 @@
         <div class="categoria-card" [style.flex]="'0 0 ' + (100 / categoriasVisibles()) + '%'"
           (click)="verCategoria(cat)">
           <div class="categoria-imagen"
-            [style.background]="!obtenerImagenCategoria(cat.id) ? 'linear-gradient(135deg,' + cat.colorInicio + ',' + cat.colorFin + ')' : null">
-            @if (obtenerImagenCategoria(cat.id); as url) {
+            [style.background]="!obtenerImagenCategoria(cat) ? 'linear-gradient(135deg,' + cat.colorInicio + ',' + cat.colorFin + ')' : null">
+            @if (obtenerImagenCategoria(cat); as url) {
             <img [src]="url" [alt]="cat.nombre" class="categoria-foto" />
             } @else {
-            <span>{{ cat.icono }}</span>
+            <span class="categoria-inicial">{{ cat.nombre.charAt(0) }}</span>
             }
           </div>
           <h3>{{ cat.nombre }}</h3>

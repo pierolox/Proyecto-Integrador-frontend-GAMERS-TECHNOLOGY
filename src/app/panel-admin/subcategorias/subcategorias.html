@@ -28,6 +28,7 @@
         <table class="data-table">
             <thead>
                 <tr>
+                    <th>Imagen</th>
                     <th>Nombre</th>
                     <th>Categoría</th>
                     <th>Descripción</th>
@@ -38,6 +39,16 @@
             <tbody>
                 @for (s of subcategoriasFiltradas(); track s.id) {
                 <tr>
+                    <td>
+                        @if (resolverUrlImagen(s.imagen); as url) {
+                        <img class="cell-thumb" [src]="url" [alt]="s.nombre" />
+                        } @else {
+                        <div class="cell-thumb"
+                            style="display:flex;align-items:center;justify-content:center;font-size:11px;color:#9ca3af;background:#f3f4f6;">
+                            Sin imagen
+                        </div>
+                        }
+                    </td>
                     <td class="cell-title">{{ s.nombre }}</td>
                     <td>{{ nombreCategoria(s.categoriaId) }}</td>
                     <td>{{ s.descripcion }}</td>
@@ -69,7 +80,7 @@
                 </tr>
                 } @empty {
                 <tr class="empty-row">
-                    <td colspan="5">No se encontraron subcategorías.</td>
+                    <td colspan="6">No se encontraron subcategorías.</td>
                 </tr>
                 }
             </tbody>
@@ -113,12 +124,45 @@
                     <textarea id="subDescripcion" name="descripcion" [(ngModel)]="form.descripcion"
                         placeholder="Describe la subcategoría..."></textarea>
                 </div>
+                <div class="form-group full">
+                    <label>Imagen de la subcategoría</label>
+
+                    <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+                        @if (resolverUrlImagen(form.imagen); as url) {
+                        <div style="position:relative;">
+                            <img [src]="url" alt="Vista previa"
+                                style="width:110px; height:110px; object-fit:cover; border-radius:10px; border:1px solid var(--color-border, #e5e7eb);" />
+                            <button type="button" (click)="quitarImagen()"
+                                title="Quitar imagen"
+                                style="position:absolute; top:-8px; right:-8px; width:24px; height:24px; border-radius:50%; background:#ef4444; color:#fff; border:none; cursor:pointer; font-size:14px; line-height:1;">✕</button>
+                        </div>
+                        } @else {
+                        <div style="width:110px; height:110px; border-radius:10px; background:#f3f4f6; display:flex; align-items:center; justify-content:center; font-size:12px; color:#9ca3af; text-align:center; padding:8px;">
+                            Sin imagen
+                        </div>
+                        }
+
+                        <div style="flex:1; min-width:200px;">
+                            <label for="subImagenArchivo" class="btn btn-outline"
+                                style="display:inline-flex; cursor:pointer; margin:0;">
+                                {{ subiendoImagen() ? 'Subiendo...' : (form.imagen ? 'Cambiar imagen' : 'Subir imagen') }}
+                            </label>
+                            <input id="subImagenArchivo" type="file" accept="image/jpeg,image/png,image/webp,image/gif"
+                                (change)="onArchivoSeleccionado($event)" [disabled]="subiendoImagen()"
+                                style="display:none;" />
+                            <span class="form-hint" style="display:block; margin-top:6px;">JPG, PNG, WEBP o GIF · máx. 5MB.</span>
+                            @if (errorImagen()) {
+                            <span style="display:block; margin-top:6px; color:#991b1b; font-size:13px;">{{ errorImagen() }}</span>
+                            }
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
 
         <div class="modal-footer">
             <button type="button" class="btn btn-outline" (click)="cerrarModal()">Cancelar</button>
-            <button type="button" class="btn btn-primary" (click)="guardar()">
+            <button type="button" class="btn btn-primary" [disabled]="subiendoImagen()" (click)="guardar()">
                 {{ modoEdicion() ? 'Actualizar' : 'Guardar' }}
             </button>
         </div>

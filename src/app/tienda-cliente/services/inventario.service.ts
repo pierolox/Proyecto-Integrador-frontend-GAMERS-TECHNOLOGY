@@ -12,7 +12,7 @@ interface CategoriaApi {
   idCategoria: number;
   nombre: string;
   descripcion: string;
-  icono: string | null;
+  imagen: string | null;
   colorInicio: string | null;
   colorFin: string | null;
 }
@@ -22,7 +22,7 @@ function categoriaApiAFrontend(c: CategoriaApi): Categoria {
     id: c.idCategoria,
     nombre: c.nombre,
     descripcion: c.descripcion ?? "",
-    icono: c.icono ?? "",
+    imagen: c.imagen ?? "",
     colorInicio: c.colorInicio ?? "#6366f1",
     colorFin: c.colorFin ?? "#4338ca",
   };
@@ -32,7 +32,7 @@ function categoriaFrontendABackend(c: Omit<Categoria, "id"> | Categoria) {
   return {
     nombre: c.nombre,
     descripcion: c.descripcion,
-    icono: c.icono,
+    imagen: c.imagen,
     colorInicio: c.colorInicio,
     colorFin: c.colorFin,
   };
@@ -43,6 +43,7 @@ interface SubcategoriaApi {
   idSubcategoria: number;
   nombre: string;
   descripcion: string;
+  imagen: string | null;
   idCategoria: number;
 }
 
@@ -52,6 +53,7 @@ function subcategoriaApiAFrontend(s: SubcategoriaApi): Subcategoria {
     categoriaId: s.idCategoria,
     nombre: s.nombre,
     descripcion: s.descripcion ?? "",
+    imagen: s.imagen ?? "",
   };
 }
 
@@ -59,6 +61,7 @@ function subcategoriaFrontendABackend(s: Omit<Subcategoria, "id"> | Subcategoria
   return {
     nombre: s.nombre,
     descripcion: s.descripcion,
+    imagen: s.imagen,
     idCategoria: s.categoriaId,
   };
 }
@@ -218,6 +221,14 @@ export class InventarioService {
     return this.subcategorias;
   }
 
+  // Sube el archivo de imagen al backend y devuelve la URL pública
+  // (ej. "/uploads/subcategorias/xxxx.jpg") lista para guardar en subcategoria.imagen.
+  subirImagenSubcategoria(archivo: File) {
+    const formData = new FormData();
+    formData.append("archivo", archivo);
+    return this.http.post<{ url: string }>(`${this.subcategoriasUrl}/imagen`, formData);
+  }
+
   agregarSubcategoria(subcategoria: Omit<Subcategoria, "id">) {
     this.http
       .post<SubcategoriaApi>(this.subcategoriasUrl, subcategoriaFrontendABackend(subcategoria))
@@ -256,6 +267,14 @@ export class InventarioService {
 
   categoriasSignal() {
     return this.categorias;
+  }
+
+  // Sube el archivo de imagen al backend y devuelve la URL pública
+  // (ej. "/uploads/categorias/xxxx.jpg") lista para guardar en categoria.imagen.
+  subirImagenCategoria(archivo: File) {
+    const formData = new FormData();
+    formData.append("archivo", archivo);
+    return this.http.post<{ url: string }>(`${this.categoriasUrl}/imagen`, formData);
   }
 
   agregarCategoria(categoria: Omit<Categoria, "id">) {
