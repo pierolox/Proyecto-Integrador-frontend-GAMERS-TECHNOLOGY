@@ -52,6 +52,17 @@ export class PedidoService {
     });
   }
 
+  // Cambia el estado de un pedido (panel-admin/pedidos). Solo administrador.
+  actualizarEstado(id: number, estado: Pedido['estado']): Observable<Pedido> {
+    return this.http.put<Pedido>(`${this.pedidosUrl}/${id}/estado`, { estado }).pipe(
+      tap((actualizado) => {
+        this.pedidos.update((lista) =>
+          lista.map((p) => (p.id === id ? actualizado : p)),
+        );
+      }),
+    );
+  }
+
   private extraerMensajeError(err: any): string {
     const cuerpo = err?.error;
     if (cuerpo?.mensaje) return cuerpo.mensaje;

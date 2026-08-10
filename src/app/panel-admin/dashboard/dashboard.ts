@@ -1,8 +1,10 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import { PedidoService } from '../../tienda-cliente/services/pedido.service';
+import { InventarioService } from '../../tienda-cliente/services/inventario.service';
+import { Pedido } from '../../shared/models/pedido.models';
 
 type Vista = 'anio' | 'mes' | 'semana';
 
@@ -23,6 +25,8 @@ const NOMBRES_DIA = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sáb
 export class Dashboard {
   meses = NOMBRES_MES;
 
+  private inventario = inject(InventarioService);
+
   // -------- estado del selector --------
   vista = signal<Vista>('anio');
 
@@ -34,6 +38,10 @@ export class Dashboard {
 
   // Cuando la vista es "mes", se elige a qué mes pertenecen esas semanas.
   mesSeleccionado = signal<string>(NOMBRES_MES[new Date().getMonth()]);
+
+  // Filtro por categoría (0 = todas las categorías).
+  categorias = this.inventario.categoriasSignal();
+  categoriaFiltro = signal<number>(0);
 
   private pedidos!: ReturnType<PedidoService['pedidosSignal']>;
 
@@ -49,6 +57,28 @@ export class Dashboard {
     return 'S/. ' + valor.toLocaleString('es-PE');
   }
 
+  imprimir() {
+    window.print();
+  }
+
+  // -------- helpers de filtro por categoría --------
+
+  private categoriaDeProducto(productoId: number): number | undefined {
+    return this.inventario.obtenerProductoPorId(productoId)?.categoriaId;
+  }
+
+  // Monto de un pedido a considerar en los totales: si hay filtro de
+  // categoría activo, solo se suman los ítems de esa categoría (montos
+  // sin IGV, a nivel de detalle); si no, se usa el total del pedido.
+  private montoFiltrado(pedido: Pedido): number {
+    const catId = this.categoriaFiltro();
+    if (!catId) return pedido.total;
+
+    return pedido.productos
+      .filter((item) => this.categoriaDeProducto(item.productoId) === catId)
+      .reduce((acc, item) => acc + item.subtotal, 0);
+  }
+
   // -------- agregaciones sobre los pedidos reales --------
 
   // Ventas por mes, dentro del año actual.
@@ -60,7 +90,7 @@ export class Dashboard {
     this.pedidos().forEach((p) => {
       const fecha = new Date(p.fecha);
       if (fecha.getFullYear() === anioActual) {
-        totales[NOMBRES_MES[fecha.getMonth()]] += p.total;
+        totales[NOMBRES_MES[fecha.getMonth()]] += this.montoFiltrado(p);
       }
     });
 
@@ -83,7 +113,7 @@ export class Dashboard {
       const fecha = new Date(p.fecha);
       if (fecha.getFullYear() === anioActual && fecha.getMonth() === indiceMes) {
         const semana = Math.min(5, Math.ceil(fecha.getDate() / 7));
-        totales[`Semana ${semana}`] += p.total;
+        totales[`Semana ${semana}`] += this.montoFiltrado(p);
       }
     });
 
@@ -92,14 +122,7 @@ export class Dashboard {
 
   // Ventas por día, dentro de la semana actual (lunes a domingo).
   private ventasPorDia = computed<Record<string, number>>(() => {
-    const hoy = new Date();
-    const diaSemanaHoy = (hoy.getDay() + 6) % 7; // 0 = lunes
-    const lunes = new Date(hoy);
-    lunes.setDate(hoy.getDate() - diaSemanaHoy);
-    lunes.setHours(0, 0, 0, 0);
-    const domingo = new Date(lunes);
-    domingo.setDate(lunes.getDate() + 6);
-    domingo.setHours(23, 59, 59, 999);
+    const [lunes, domingo] = this.rangoSemanaActual();
 
     const totales: Record<string, number> = {};
     NOMBRES_DIA.forEach((d) => (totales[d] = 0));
@@ -108,11 +131,69 @@ export class Dashboard {
       const fecha = new Date(p.fecha);
       if (fecha >= lunes && fecha <= domingo) {
         const indice = (fecha.getDay() + 6) % 7;
-        totales[NOMBRES_DIA[indice]] += p.total;
+        totales[NOMBRES_DIA[indice]] += this.montoFiltrado(p);
       }
     });
 
     return totales;
+  });
+
+  private rangoSemanaActual(): [Date, Date] {
+    const hoy = new Date();
+    const diaSemanaHoy = (hoy.getDay() + 6) % 7; // 0 = lunes
+    const lunes = new Date(hoy);
+    lunes.setDate(hoy.getDate() - diaSemanaHoy);
+    lunes.setHours(0, 0, 0, 0);
+    const domingo = new Date(lunes);
+    domingo.setDate(lunes.getDate() + 6);
+    domingo.setHours(23, 59, 59, 999);
+    return [lunes, domingo];
+  }
+
+  // Pedidos dentro del rango de fechas actualmente seleccionado
+  // (año completo / mes elegido / semana actual), usado para "más vendidos".
+  private pedidosEnPeriodo = computed<Pedido[]>(() => {
+    const vistaActual = this.vista();
+    const anioActual = new Date().getFullYear();
+
+    if (vistaActual === 'anio') {
+      return this.pedidos().filter((p) => new Date(p.fecha).getFullYear() === anioActual);
+    }
+
+    if (vistaActual === 'mes') {
+      const indiceMes = NOMBRES_MES.indexOf(this.mesSeleccionado());
+      return this.pedidos().filter((p) => {
+        const fecha = new Date(p.fecha);
+        return fecha.getFullYear() === anioActual && fecha.getMonth() === indiceMes;
+      });
+    }
+
+    const [lunes, domingo] = this.rangoSemanaActual();
+    return this.pedidos().filter((p) => {
+      const fecha = new Date(p.fecha);
+      return fecha >= lunes && fecha <= domingo;
+    });
+  });
+
+  // Top 5 productos más vendidos (por cantidad) en el período y categoría
+  // actualmente seleccionados.
+  productosMasVendidos = computed<{ nombre: string; cantidad: number }[]>(() => {
+    const catId = this.categoriaFiltro();
+    const conteo = new Map<number, { nombre: string; cantidad: number }>();
+
+    this.pedidosEnPeriodo().forEach((p) => {
+      p.productos.forEach((item) => {
+        if (catId && this.categoriaDeProducto(item.productoId) !== catId) return;
+
+        const actual = conteo.get(item.productoId) ?? { nombre: item.nombre, cantidad: 0 };
+        actual.cantidad += item.cantidad;
+        conteo.set(item.productoId, actual);
+      });
+    });
+
+    return Array.from(conteo.values())
+      .sort((a, b) => b.cantidad - a.cantidad)
+      .slice(0, 5);
   });
 
   totalPeriodo = computed(() => {

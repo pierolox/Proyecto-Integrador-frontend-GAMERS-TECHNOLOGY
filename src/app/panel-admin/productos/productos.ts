@@ -36,6 +36,13 @@ export class Productos {
   productos = this.inventario.productosSignal();
   errorGuardado = this.inventario.errorProductoSignal();
 
+  // Nombres de productos con stock < 5, para la alerta visual (HU8).
+  productosConStockBajo = computed(() =>
+    this.productos()
+      .filter((p) => p.stock < 5)
+      .map((p) => p.nombre),
+  );
+
   // -------- subida de imagen --------
   subiendoImagen = signal(false);
   errorImagen = signal<string | null>(null);

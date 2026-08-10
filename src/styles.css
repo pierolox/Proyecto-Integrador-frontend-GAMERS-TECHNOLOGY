@@ -226,6 +226,11 @@ table.data-table {
   color: var(--color-text-muted);
 }
 
+.badge-danger {
+  background: #fef2f2;
+  color: #991b1b;
+}
+
 /* ACCIONES DE TABLA */
 .row-actions {
   display: flex;

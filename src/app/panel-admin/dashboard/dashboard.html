@@ -1,7 +1,7 @@
 <div class="dashboard-card">
 
     <div class="chart-toolbar">
-        <div class="view-switch">
+        <div class="view-switch no-imprimir">
             @for (op of opciones; track op.id) {
             <button
                 type="button"
@@ -14,7 +14,7 @@
         </div>
 
         @if (vista() === 'mes') {
-        <div class="month-select">
+        <div class="month-select no-imprimir">
             <label for="mesSelect">Mes</label>
             <select id="mesSelect" [(ngModel)]="mesSeleccionado">
                 @for (m of meses; track m) {
@@ -24,10 +24,27 @@
         </div>
         }
 
+        <div class="month-select no-imprimir">
+            <label for="categoriaSelect">Categoría</label>
+            <select id="categoriaSelect" [ngModel]="categoriaFiltro()" (ngModelChange)="categoriaFiltro.set($event)">
+                <option [ngValue]="0">Todas</option>
+                @for (c of categorias(); track c.id) {
+                <option [ngValue]="c.id">{{ c.nombre }}</option>
+                }
+            </select>
+        </div>
+
         <div class="chart-total">
             <span class="chart-total-label">Total del período</span>
             <span class="chart-total-value">{{ formatearSoles(totalPeriodo()) }}</span>
         </div>
+
+        <button type="button" class="btn btn-outline no-imprimir" (click)="imprimir()" style="margin-left:8px;">
+            <svg viewBox="0 0 24 24" fill="none" width="16" height="16" style="vertical-align:-3px; margin-right:4px;">
+                <path d="M6 9V3H18V9M6 18H4C3.4 18 3 17.6 3 17V11C3 10.4 3.4 10 4 10H20C20.6 10 21 10.4 21 11V17C21 17.6 20.6 18 20 18H18M6 14H18V21H6V14Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+            </svg>
+            Imprimir
+        </button>
     </div>
 
     <div class="chart-wrapper">
@@ -37,5 +54,21 @@
             [options]="chartOptions"
             [type]="chartType">
         </canvas>
+    </div>
+
+    <div class="top-productos">
+        <h3>Productos más vendidos</h3>
+        @if (productosMasVendidos().length > 0) {
+        <ol class="top-productos-lista">
+            @for (p of productosMasVendidos(); track p.nombre) {
+            <li>
+                <span class="top-producto-nombre">{{ p.nombre }}</span>
+                <span class="top-producto-cantidad">{{ p.cantidad }} unid.</span>
+            </li>
+            }
+        </ol>
+        } @else {
+        <p class="top-productos-vacio">No hay ventas registradas en este período.</p>
+        }
     </div>
 </div>
