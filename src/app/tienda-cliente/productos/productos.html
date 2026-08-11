@@ -11,10 +11,7 @@
 
       <h4>Categorías</h4>
 
-      <button
-        class="filtro-item"
-        [class.activo]="categoriaActiva() === null"
-        (click)="filtrarCategoria(null)">
+      <button class="filtro-item" [class.activo]="categoriaActiva() === null" (click)="filtrarCategoria(null)">
 
         Todas las categorías
 
@@ -24,14 +21,9 @@
 
       <div class="categoria">
 
-        <button
-          class="filtro-item"
-          [class.activo]="categoriaActiva() === cat.id"
-          (click)="filtrarCategoria(cat.id)">
+        <button class="filtro-item" [class.activo]="categoriaActiva() === cat.id" (click)="filtrarCategoria(cat.id)">
 
-          <span
-            class="punto-color"
-            [style.background]="cat.colorInicio">
+          <span class="punto-color" [style.background]="cat.colorInicio">
           </span>
 
           {{ cat.nombre }}
@@ -44,9 +36,7 @@
 
           @for (sub of obtenerSubcategorias(cat.id); track sub.id) {
 
-          <button
-            class="subcategoria-item"
-            [class.activo]="subcategoriaActiva() === sub.id"
+          <button class="subcategoria-item" [class.activo]="subcategoriaActiva() === sub.id"
             (click)="filtrarSubcategoria(sub.id)">
 
             {{ sub.nombre }}
@@ -75,13 +65,12 @@
 
         <h1>{{ tituloPagina() }}</h1>
 
+        @if (soloNuevos() || subcategoriaActiva() !== null) {
         <div class="orden">
 
           <label for="orden">Ordenar por</label>
 
-          <select
-            id="orden"
-            (change)="cambiarOrden($any($event.target).value)">
+          <select id="orden" (change)="cambiarOrden($any($event.target).value)">
 
             <option value="relevancia">
               Relevancia
@@ -98,8 +87,21 @@
           </select>
 
         </div>
+        }
 
       </div>
+
+      @if (soloNuevos() || subcategoriaActiva() !== null) {
+
+      <!-- ========================= -->
+      <!-- NIVEL 3: PRODUCTOS -->
+      <!-- ========================= -->
+
+      @if (!soloNuevos()) {
+      <button class="link-volver" (click)="volverASubcategorias()">
+        &#8592; Volver a subcategorías
+      </button>
+      }
 
       <p class="resultados">
 
@@ -114,8 +116,7 @@
 
         <div class="producto-card" [routerLink]="['/productos', p.id]" style="cursor:pointer;">
 
-          <div
-            class="producto-imagen"
+          <div class="producto-imagen"
             [style.background]="!resolverUrlImagen(p.imagen) ? 'linear-gradient(135deg,' + p.colorInicio + ',' + p.colorFin + ')' : null">
 
             @if (p.esNuevo) {
@@ -237,6 +238,86 @@
         }
 
       </div>
+
+      } @else if (categoriaActiva() !== null) {
+
+      <!-- ========================= -->
+      <!-- NIVEL 2: SUBCATEGORÍAS -->
+      <!-- ========================= -->
+
+      <button class="link-volver" (click)="volverACategorias()">
+        &#8592; Volver a categorías
+      </button>
+
+      <div class="grilla-categorias">
+
+        @for (sub of obtenerSubcategorias(categoriaActiva()!); track sub.id) {
+
+        <button class="tarjeta-categoria" (click)="filtrarSubcategoria(sub.id)">
+
+          <div class="tarjeta-categoria-imagen"
+            [style.background]="!resolverUrlImagen(sub.imagen) ? 'linear-gradient(135deg,#6366f1,#4338ca)' : null">
+
+            @if (resolverUrlImagen(sub.imagen); as url) {
+            <img [src]="url" [alt]="sub.nombre" />
+            } @else {
+            <span class="tarjeta-categoria-inicial">{{ sub.nombre.charAt(0) }}</span>
+            }
+
+          </div>
+
+          <span class="tarjeta-categoria-nombre">{{ sub.nombre }}</span>
+
+        </button>
+
+        } @empty {
+
+        <p class="sin-resultados">
+          Esta categoría todavía no tiene subcategorías.
+        </p>
+
+        }
+
+      </div>
+
+      } @else {
+
+      <!-- ========================= -->
+      <!-- NIVEL 1: CATEGORÍAS -->
+      <!-- ========================= -->
+
+      <div class="grilla-categorias">
+
+        @for (cat of categorias; track cat.id) {
+
+        <button class="tarjeta-categoria" (click)="filtrarCategoria(cat.id)">
+
+          <div class="tarjeta-categoria-imagen"
+            [style.background]="!resolverUrlImagen(cat.imagen) ? 'linear-gradient(135deg,' + cat.colorInicio + ',' + cat.colorFin + ')' : null">
+
+            @if (resolverUrlImagen(cat.imagen); as url) {
+            <img [src]="url" [alt]="cat.nombre" />
+            } @else {
+            <span class="tarjeta-categoria-inicial">{{ cat.nombre.charAt(0) }}</span>
+            }
+
+          </div>
+
+          <span class="tarjeta-categoria-nombre">{{ cat.nombre }}</span>
+
+        </button>
+
+        } @empty {
+
+        <p class="sin-resultados">
+          Todavía no hay categorías registradas.
+        </p>
+
+        }
+
+      </div>
+
+      }
 
     </div>
 

@@ -61,6 +61,16 @@ export class Productos implements OnInit {
       this.router.url.includes('/productos/nuevos')
     );
 
+    // Si se llega desde un enlace tipo /productos?categoria=X
+    // (ej. al hacer clic en una categoría desde el Home), se preselecciona.
+    const categoriaParam = this.route.snapshot.queryParamMap.get('categoria');
+    if (categoriaParam) {
+      const id = Number(categoriaParam);
+      if (!Number.isNaN(id)) {
+        this.categoriaActiva.set(id);
+      }
+    }
+
     this.actualizarTitulo();
   }
 
@@ -103,6 +113,20 @@ export class Productos implements OnInit {
   filtrarSubcategoria(id: number) {
 
     this.subcategoriaActiva.set(id);
+    this.actualizarTitulo();
+  }
+
+  // Vuelve a la vista de "todas las categorías".
+  volverACategorias() {
+    this.categoriaActiva.set(null);
+    this.subcategoriaActiva.set(null);
+    this.actualizarTitulo();
+  }
+
+  // Desde la vista de productos, vuelve a la vista de subcategorías
+  // de la categoría actual (sin salir de ella).
+  volverASubcategorias() {
+    this.subcategoriaActiva.set(null);
     this.actualizarTitulo();
   }
 
@@ -170,7 +194,7 @@ export class Productos implements OnInit {
     }
 
     this.tituloPagina.set(
-      'Todos los productos'
+      'Todas las categorías'
     );
   }
 

@@ -26,17 +26,38 @@
   z-index: 1;
 }
 
+.hero-imagen {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.hero-fallback {
+  object-fit: unset;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.25) 45%,
+    rgba(0, 0, 0, 0.15) 100%
+  );
+}
+
 .hero-contenido {
+  position: relative;
+  z-index: 2;
   text-align: center;
   color: #fff;
   max-width: 640px;
   padding: 0 1.5rem;
-}
-
-.hero-icono {
-  font-size: 2.6rem;
-  display: block;
-  margin-bottom: 0.75rem;
 }
 
 .hero-contenido h1 {

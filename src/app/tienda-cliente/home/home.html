@@ -1,10 +1,15 @@
 <section class="hero">
   <div class="hero-track">
     @for (slide of slides; track slide.titulo; let i = $index) {
-    <div class="hero-slide" [class.activo]="i === slideActual()"
-      [style.background]="'linear-gradient(120deg,' + slide.colorInicio + ',' + slide.colorFin + ')'">
+    <div class="hero-slide" [class.activo]="i === slideActual()">
+      @if (slide.imagen) {
+      <img [src]="slide.imagen" [alt]="slide.titulo" class="hero-imagen" />
+      <div class="hero-overlay"></div>
+      } @else {
+      <div class="hero-imagen hero-fallback"
+        [style.background]="'linear-gradient(120deg,' + slide.colorInicio + ',' + slide.colorFin + ')'"></div>
+      }
       <div class="hero-contenido">
-        <span class="hero-icono">{{ slide.icono }}</span>
         <h1>{{ slide.titulo }}</h1>
         <p>{{ slide.subtitulo }}</p>
         <button class="btn-hero" (click)="irA(slide)">{{ slide.boton }}</button>

@@ -9,9 +9,12 @@ interface Slide {
   subtitulo: string;
   boton: string;
   link: string;
+  // Ruta o URL de la imagen de fondo del slide. Puede ser un archivo dentro
+  // de public/ (ej. '/assets/hero/perifericos.jpg') o una URL absoluta.
+  // Si se deja vacío, se usa el degradado de color como respaldo.
+  imagen: string;
   colorInicio: string;
   colorFin: string;
-  icono: string;
 }
 
 @Component({
@@ -23,9 +26,9 @@ interface Slide {
 })
 export class Home implements OnInit, OnDestroy {
   slides: Slide[] = [
-    { titulo: 'Sube de nivel tu setup', subtitulo: 'Hasta 30% de descuento en periféricos gamer', boton: 'Ver ofertas', link: '/ofertas', colorInicio: '#312e81', colorFin: '#4338ca', icono: '🎮' },
-    { titulo: 'Nuevas tarjetas gráficas RTX', subtitulo: 'La potencia que tu PC necesita ya está aquí', boton: 'Ver tarjetas gráficas', link: '/productos', colorInicio: '#0891b2', colorFin: '#164e63', icono: '🖥️' },
-    { titulo: 'Consolas de última generación', subtitulo: 'PS5 y Xbox Series X con stock disponible', boton: 'Ver consolas', link: '/productos', colorInicio: '#7e22ce', colorFin: '#4c1d95', icono: '🕹️' },
+    { titulo: 'Sube de nivel tu setup', subtitulo: 'Hasta 30% de descuento en periféricos gamer', boton: 'Ver ofertas', link: '/ofertas', imagen: '', colorInicio: '#312e81', colorFin: '#4338ca' },
+    { titulo: 'Nuevas tarjetas gráficas RTX', subtitulo: 'La potencia que tu PC necesita ya está aquí', boton: 'Ver tarjetas gráficas', link: '/productos', imagen: '', colorInicio: '#0891b2', colorFin: '#164e63' },
+    { titulo: 'Consolas de última generación', subtitulo: 'PS5 y Xbox Series X con stock disponible', boton: 'Ver consolas', link: '/productos', imagen: '', colorInicio: '#7e22ce', colorFin: '#4c1d95' },
   ];
   slideActual = signal(0);
   private intervalId: any;
