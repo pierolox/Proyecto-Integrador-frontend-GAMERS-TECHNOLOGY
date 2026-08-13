@@ -1,19 +1,25 @@
 <section class="hero">
   <div class="hero-track">
     @for (slide of slides; track slide.titulo; let i = $index) {
-    <div class="hero-slide" [class.activo]="i === slideActual()">
+    <div class="hero-slide" [class.activo]="i === slideActual()" (click)="irA(slide)">
       @if (slide.imagen) {
-      <img [src]="slide.imagen" [alt]="slide.titulo" class="hero-imagen" />
+      <img [src]="slide.imagen" [alt]="slide.titulo || 'Promoción'" class="hero-imagen" />
+      @if (slide.titulo || slide.subtitulo) {
       <div class="hero-overlay"></div>
+      }
       } @else {
       <div class="hero-imagen hero-fallback"
         [style.background]="'linear-gradient(120deg,' + slide.colorInicio + ',' + slide.colorFin + ')'"></div>
       }
+      @if (slide.titulo || slide.subtitulo || slide.boton) {
       <div class="hero-contenido">
-        <h1>{{ slide.titulo }}</h1>
-        <p>{{ slide.subtitulo }}</p>
-        <button class="btn-hero" (click)="irA(slide)">{{ slide.boton }}</button>
+        @if (slide.titulo) { <h1>{{ slide.titulo }}</h1> }
+        @if (slide.subtitulo) { <p>{{ slide.subtitulo }}</p> }
+        @if (slide.boton) {
+        <button class="btn-hero" (click)="$event.stopPropagation(); irA(slide)">{{ slide.boton }}</button>
+        }
       </div>
+      }
     </div>
     }
   </div>

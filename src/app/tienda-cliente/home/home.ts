@@ -9,8 +9,22 @@ interface Slide {
   subtitulo: string;
   boton: string;
   link: string;
-  // Ruta o URL de la imagen de fondo del slide. Puede ser un archivo dentro
-  // de public/ (ej. '/assets/hero/perifericos.jpg') o una URL absoluta.
+  // Ruta o URL de la imagen de fondo del slide.
+  //
+  // CÓMO USARLA: coloca el archivo dentro de la carpeta "public/" del
+  // proyecto (al mismo nivel que "src/"), por ejemplo en public/hero/.
+  // La ruta que pones aquí NO lleva "public": todo lo que está dentro de
+  // public/ se sirve desde la raíz del sitio.
+  //   Archivo real:  public/hero/asus-rx9000.jpg
+  //   Ruta a usar:   '/hero/asus-rx9000.jpg'
+  //
+  // Si dejas título y subtítulo vacíos ('') se asume que el banner ya
+  // trae su propio texto (como los banners de ASUS), y no se dibuja
+  // ningún overlay oscuro ni texto encima, solo la imagen a pantalla
+  // completa; todo el slide queda clickeable hacia "link".
+  // Si pones título/subtítulo, sí se agrega el degradado oscuro para
+  // que el texto se lea bien encima de una foto de producto normal.
+  //
   // Si se deja vacío, se usa el degradado de color como respaldo.
   imagen: string;
   colorInicio: string;
@@ -26,9 +40,13 @@ interface Slide {
 })
 export class Home implements OnInit, OnDestroy {
   slides: Slide[] = [
-    { titulo: 'Sube de nivel tu setup', subtitulo: 'Hasta 30% de descuento en periféricos gamer', boton: 'Ver ofertas', link: '/ofertas', imagen: '', colorInicio: '#312e81', colorFin: '#4338ca' },
-    { titulo: 'Nuevas tarjetas gráficas RTX', subtitulo: 'La potencia que tu PC necesita ya está aquí', boton: 'Ver tarjetas gráficas', link: '/productos', imagen: '', colorInicio: '#0891b2', colorFin: '#164e63' },
-    { titulo: 'Consolas de última generación', subtitulo: 'PS5 y Xbox Series X con stock disponible', boton: 'Ver consolas', link: '/productos', imagen: '', colorInicio: '#7e22ce', colorFin: '#4c1d95' },
+    // Ejemplo estilo "banner completo" (como el de ASUS que me mostraste):
+    // guarda tu imagen en public/hero/rx9000.jpg y descomenta/edita esto.
+    // { titulo: '', subtitulo: '', boton: '', link: '/productos', imagen: '', colorInicio: '#312e81', colorFin: '#4338ca' },
+
+    { titulo: '', subtitulo: '', boton: '', link: '/ofertas', imagen: '/hero/perifericos.jpg', colorInicio: '#312e81', colorFin: '#4338ca' },
+    { titulo: '', subtitulo: '', boton: '', link: '/productos', imagen: '/hero/rtx5000.jpg', colorInicio: '#0891b2', colorFin: '#164e63' },
+    { titulo: '', subtitulo: '', boton: '', link: '/productos', imagen: '/hero/consolas.jpg', colorInicio: '#7e22ce', colorFin: '#4c1d95' },
   ];
   slideActual = signal(0);
   private intervalId: any;
